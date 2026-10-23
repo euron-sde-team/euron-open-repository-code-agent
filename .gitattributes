@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.gif binary
+*.zip binary
+*.gz binary
+# Diff fixtures must keep their exact bytes, including trailing whitespace.
+*.diff -text
+*.patch -text
