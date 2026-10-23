@@ -261,9 +261,7 @@ def upgrade() -> None:
     )
     op.create_index("ix_symbols_snapshot_id_name", "symbols", ["snapshot_id", "name"])
     op.create_index("ix_symbols_file_id_start_line", "symbols", ["file_id", "start_line"])
-    op.execute(
-        "CREATE INDEX ix_symbols_name_trgm ON symbols USING gin (lower(name) gin_trgm_ops)"
-    )
+    op.execute("CREATE INDEX ix_symbols_name_trgm ON symbols USING gin (lower(name) gin_trgm_ops)")
 
     op.create_table(
         "symbol_refs",
@@ -401,9 +399,7 @@ def upgrade() -> None:
             name="status",
         ),
     )
-    op.create_index(
-        "ix_tasks_workspace_id_updated_at", "tasks", ["workspace_id", "updated_at"]
-    )
+    op.create_index("ix_tasks_workspace_id_updated_at", "tasks", ["workspace_id", "updated_at"])
     op.create_index("ix_tasks_repository_id_created_at", "tasks", ["repository_id", "created_at"])
     op.create_index(
         "ix_tasks_unfinished",
