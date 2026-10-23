@@ -83,6 +83,7 @@ ignore = [
 "tests/**" = ["S101", "S105", "S106", "S108", "PLR2004", "E501"]
 "src/codeagent/migrations/**" = ["E501"]
 "src/codeagent/agent/catalog.py" = ["E501"]  # helper sources and their tests are data
+"src/codeagent/sandbox/docker.py" = ["S108"]  # /tmp there is the container's private tmpfs
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
