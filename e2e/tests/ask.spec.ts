@@ -39,7 +39,7 @@ test("a follow-up keeps its context, and the conversation is kept in the history
   await expect(page.getByRole("main")).toContainText("Invoice.tax");
 
   const history = page.getByRole("navigation", { name: "Conversations" });
-  await expect(history.getByRole("link", { name: /What does calc_tax do/ })).toBeVisible();
+  await expect(history.getByRole("link", { name: /What does calc_tax do/ }).first()).toBeVisible();
 });
 
 test("a question the code cannot answer says so instead of guessing", async ({ page }) => {

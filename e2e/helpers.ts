@@ -32,6 +32,10 @@ export async function signInWithForm(page: Page, who: Person = "owner"): Promise
   await page.getByLabel("Email").fill(PEOPLE[who].email);
   await page.getByLabel("Password").fill(requirePassword());
   await page.getByRole("button", { name: "Sign in" }).click();
+  // The home page opens the person's first workspace, which is not always the demo one
+  // (earlier runs leave scratch workspaces behind): go to the demo workspace explicitly.
+  await expect(page).not.toHaveURL(/\/login/);
+  await page.goto(`/w/${WORKSPACE}`);
   await expect(page).toHaveURL(new RegExp(`/w/${WORKSPACE}`));
 }
 
@@ -45,9 +49,12 @@ export async function signIn(page: Page, who: Person = "owner"): Promise<void> {
   const saved = path.join(SESSIONS, `${who}.json`);
   if (existsSync(saved)) {
     await page.context().addCookies(JSON.parse(readFileSync(saved, "utf8")));
-    await page.goto(`/w/${WORKSPACE}`);
-    await page.waitForURL(/\/(w\/[^/]+|login|welcome)/);
-    if (page.url().includes(`/w/${WORKSPACE}`)) return;
+    // Ask the API, not the page: a stale cookie only shows as a redirect after the page loads.
+    const session = await page.request.get(`${API_URL}/api/v1/auth/me`);
+    if (session.ok()) {
+      await page.goto(`/w/${WORKSPACE}`);
+      return;
+    }
     await page.context().clearCookies();
   }
   await signInWithForm(page, who);
