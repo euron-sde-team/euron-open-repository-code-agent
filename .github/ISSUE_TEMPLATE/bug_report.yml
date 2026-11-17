@@ -1,0 +1,63 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. **Security issues: do not file here**, follow SECURITY.md instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: If an answer, a patch or a test run is involved, include the question or the task text (with private content removed), the answerer or planner shown on it, and the test run log. The request id from the error helps too.
+      placeholder: |
+        1. make up && make demo
+        2. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Indexing (files, symbols, references, chunks)
+        - Search (symbols, text, semantic)
+        - Answers and citations
+        - The agent and its patches
+        - Review, approval and applying
+        - Sandboxed test runs
+        - Workspaces, roles and API keys
+        - Web app
+        - API
+        - Deployment
+        - Other
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Answerer and planner
+      options: [Local (offline), OpenAI-compatible, Ollama, Not specific to one]
+  - type: dropdown
+    id: env
+    attributes:
+      label: Environment
+      options: [Local (Floci), Local against AWS, AWS (Terraform), Self-hosted (other), Other]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Redact keys, tokens, passwords, hostnames and private conversation text before pasting.
+      render: text
