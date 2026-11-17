@@ -139,7 +139,7 @@ function RunsBody() {
                         {run.task_number ? (
                           <Link
                             href={wsPath(slug, "tasks", String(run.task_number))}
-                            className="text-primary ml-1.5 hover:underline"
+                            className="text-primary ml-1.5 underline underline-offset-2"
                           >
                             task #{run.task_number}
                           </Link>

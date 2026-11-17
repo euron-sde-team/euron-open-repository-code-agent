@@ -130,10 +130,10 @@ function DiffRow({
   return (
     <>
       <div className={cn("group flex", line.kind === "add" && "bg-diff-add", line.kind === "del" && "bg-diff-del")}>
-        <span className="text-subtle tabular w-11 shrink-0 pr-2 text-right select-none" aria-hidden>
+        <span className="text-muted-foreground tabular w-11 shrink-0 pr-2 text-right select-none" aria-hidden>
           {line.old_line ?? ""}
         </span>
-        <span className="text-subtle tabular w-11 shrink-0 pr-2 text-right select-none" aria-hidden>
+        <span className="text-muted-foreground tabular w-11 shrink-0 pr-2 text-right select-none" aria-hidden>
           {line.new_line ?? ""}
         </span>
         <span className="relative w-5 shrink-0 text-center select-none" aria-hidden>
