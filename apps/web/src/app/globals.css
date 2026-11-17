@@ -1,0 +1,303 @@
+@import "tailwindcss";
+
+/*
+ * CodeAgent design tokens. Every colour in the app comes from these variables, so a theme or
+ * a brand change is one edit here. Light is the default; `.dark` on <html> switches the
+ * palette (set before first paint by the inline script in the root layout, so there is no
+ * flash).
+ *
+ * Contrast was checked pair by pair (WCAG 2 AA): text tokens against every surface they sit
+ * on (--muted-foreground and --subtle on --background, --card, --muted and --sidebar; the
+ * status colours on their own soft backgrounds; the syntax colours on --code), and the chart
+ * series and --ring against --card at 3:1. Never fake muted text with opacity: use
+ * --muted-foreground (secondary copy) or --subtle (captions, placeholders).
+ *
+ * Code has its own surface (--code) and one colour per highlight class (--hl-*, the class
+ * names the API returns per token), and diffs have a soft background per side (--diff-*).
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f6f8f8;
+  --foreground: #11181c;
+  --card: #ffffff;
+  --card-foreground: #11181c;
+  --muted: #f0f3f4;
+  --muted-foreground: #4f5d66;
+  --subtle: #696e80;
+  --border: #dde3e6;
+  --input: #c9d2d6;
+  --ring: #0d9488;
+  --primary: #0f766e;
+  --primary-hover: #115e59;
+  --primary-foreground: #ffffff;
+  --accent: #e3f4f1;
+  --accent-foreground: #115e59;
+  --sidebar: #f1f5f5;
+  --sidebar-border: #dde3e6;
+  --success: #127536;
+  --success-soft: #e6f4ea;
+  --warning: #a94e08;
+  --warning-soft: #fdf1e3;
+  --danger: #be2329;
+  --danger-foreground: #ffffff;
+  --danger-soft: #fdecec;
+  --info: #1d5fa8;
+  --info-soft: #e8f0fb;
+  --highlight: #fff1b8;
+  --code: #fbfcfc;
+  --code-gutter: #eef2f3;
+  --code-line: #e3f4f1;
+  --hl-kw: #8e24aa;
+  --hl-str: #146c2e;
+  --hl-com: #5d6b73;
+  --hl-num: #b45309;
+  --hl-fn: #1d5fa8;
+  --hl-cls: #0b7285;
+  --hl-op: #4f5d66;
+  --hl-bi: #a8325e;
+  --hl-dec: #9a4a06;
+  --hl-var: #11181c;
+  --hl-punc: #4f5d66;
+  --diff-add: #e3f6e8;
+  --diff-add-strong: #b9e7c5;
+  --diff-del: #fde6e6;
+  --diff-del-strong: #f6c0c0;
+  --diff-hunk: #e8f0fb;
+  --series-1: #0f766e;
+  --series-2: #6d28d9;
+  --series-3: #c2680a;
+  --series-4: #c0267a;
+  --series-5: #2563eb;
+  --series-6: #64748b;
+  --shadow-sm: 0 1px 2px rgb(17 24 28 / 0.06);
+  --shadow-md: 0 8px 24px -8px rgb(17 24 28 / 0.16), 0 2px 6px rgb(17 24 28 / 0.06);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0b1012;
+  --foreground: #e6edf0;
+  --card: #121a1d;
+  --card-foreground: #e6edf0;
+  --muted: #182226;
+  --muted-foreground: #a3b2ba;
+  --subtle: #8b8fa1;
+  --border: #243137;
+  --input: #34444b;
+  --ring: #2dd4bf;
+  --primary: #2dd4bf;
+  --primary-hover: #5eead4;
+  --primary-foreground: #04201d;
+  --accent: #0f2b29;
+  --accent-foreground: #99f6e4;
+  --sidebar: #0e1518;
+  --sidebar-border: #1d282d;
+  --success: #4ade80;
+  --success-soft: #10261a;
+  --warning: #fbbf24;
+  --warning-soft: #2a2210;
+  --danger: #f87171;
+  --danger-foreground: #2a0a0b;
+  --danger-soft: #2c1517;
+  --info: #60a5fa;
+  --info-soft: #0f1f36;
+  --highlight: #4a3f0f;
+  --code: #0e1518;
+  --code-gutter: #131c20;
+  --code-line: #0f2b29;
+  --hl-kw: #d2a8ff;
+  --hl-str: #8ddb8c;
+  --hl-com: #8b9ba3;
+  --hl-num: #f0b072;
+  --hl-fn: #79b8ff;
+  --hl-cls: #56d4dd;
+  --hl-op: #a3b2ba;
+  --hl-bi: #ff9bb9;
+  --hl-dec: #f0b072;
+  --hl-var: #e6edf0;
+  --hl-punc: #a3b2ba;
+  --diff-add: #11291a;
+  --diff-add-strong: #1d4a2c;
+  --diff-del: #2d1517;
+  --diff-del-strong: #55262a;
+  --diff-hunk: #12233d;
+  --series-1: #2dd4bf;
+  --series-2: #a78bfa;
+  --series-3: #fbbf24;
+  --series-4: #f472b6;
+  --series-5: #60a5fa;
+  --series-6: #94a3b8;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 12px 32px -12px rgb(0 0 0 / 0.6), 0 2px 8px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-highlight: var(--highlight);
+  --color-code: var(--code);
+  --color-code-gutter: var(--code-gutter);
+  --color-code-line: var(--code-line);
+  --color-hl-kw: var(--hl-kw);
+  --color-hl-str: var(--hl-str);
+  --color-hl-com: var(--hl-com);
+  --color-hl-num: var(--hl-num);
+  --color-hl-fn: var(--hl-fn);
+  --color-hl-cls: var(--hl-cls);
+  --color-hl-op: var(--hl-op);
+  --color-hl-bi: var(--hl-bi);
+  --color-hl-dec: var(--hl-dec);
+  --color-hl-var: var(--hl-var);
+  --color-hl-punc: var(--hl-punc);
+  --color-diff-add: var(--diff-add);
+  --color-diff-add-strong: var(--diff-add-strong);
+  --color-diff-del: var(--diff-del);
+  --color-diff-del-strong: var(--diff-del-strong);
+  --color-diff-hunk: var(--diff-hunk);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --radius-2xl: 18px;
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
+  --animate-fade-in: fade-in 160ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-sheet-left: sheet-left 220ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-sheet-right: sheet-right 220ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-overlay-in: overlay-in 180ms ease-out;
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes sheet-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes sheet-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Thin, quiet scrollbars that match the palette. */
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: var(--input) transparent;
+}
+
+/* Numbers line up in tables and metric cards. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
