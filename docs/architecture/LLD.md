@@ -22,7 +22,7 @@ apps/api/src/codeagent/
 ├── api/               dependencies (caller, workspace role, rate limits) and routes
 ├── codeintel/         pure code intelligence: languages, terms, symbols, chunks, highlighting
 ├── ai/                embeddings, chat clients, answerers, prompts, citations
-├── agent/             planners, skills, edit blocks, diffs, the agent run loop
+├── agent/             planners, skills, edit blocks, diffs, mutations
 ├── sandbox/           sandbox backends (Docker, subprocess), JUnit parsing, network guard
 ├── integrations/      AWS clients, S3 or local storage, SQS or inline queue, git
 └── demo/              the demo seed and the bundled demo repositories
@@ -183,7 +183,7 @@ Conversations keep the last six turns; follow-ups that lean on the previous turn
 
 ## 6. The agent
 
-### 6.1 Run loop (`agent/runner.py`, called by the worker)
+### 6.1 Run loop (`services/tasks.py`, called by the worker)
 
 1. Load the task and mark it `running`; append trace events as the run progresses (each
    committed, so the UI can follow along).
@@ -213,7 +213,7 @@ message.
 Anything else, offline, fails with a message that lists what the offline planner can do
 and how to configure a model.
 
-### 6.3 Model planner (`agent/model_planner.py`)
+### 6.3 Model planner (`agent/planners.py`)
 
 The prompt carries a repository map (paths and top-level symbols, ranked by relevance and
 `ref_count`, within a token budget), the full text of the most relevant files, and the
@@ -306,7 +306,7 @@ worker re-reads rows, so duplicates and stale messages are harmless.
 | Type | Payload | Handler |
 | --- | --- | --- |
 | `index_snapshot` | `workspace_id`, `snapshot_id` | `services/indexing.py` |
-| `run_task` | `workspace_id`, `task_id` | `agent/runner.py` via `services/tasks.py` |
+| `run_task` | `workspace_id`, `task_id` | `services/tasks.py` (the agent run loop) |
 | `run_tests` | `workspace_id`, `test_run_id` | `services/test_runs.py` |
 | `apply_patch` | `workspace_id`, `patch_id` | `services/review.py` |
 
@@ -338,12 +338,12 @@ slug). Lists are paginated with `limit` and `offset` and return `total`.
 | --- | --- |
 | Auth | `POST /auth/login`, `/auth/signup`, `/auth/logout`, `GET/PATCH /auth/me`, `POST /auth/password` |
 | Workspaces | `GET/POST /workspaces`, `GET/PATCH/DELETE /workspaces/{ws}`, members, `GET .../audit`, `.../api-keys` |
-| Repositories | `GET/POST .../repositories`, `POST .../repositories/upload`, `GET/PATCH/DELETE .../repositories/{repo}`, `POST .../{repo}/sync`, `POST .../{repo}/upload`, `GET .../{repo}/snapshots`, `GET .../{repo}/files`, `GET .../{repo}/blob/{path}`, `GET .../{repo}/symbols/{id}` |
+| Repositories | `GET/POST .../repositories`, `POST .../repositories/upload`, `GET/PATCH/DELETE .../repositories/{repo}`, `POST .../{repo}/sync`, `POST .../{repo}/upload`, `GET .../{repo}/snapshots`, `GET .../{repo}/files`, `GET .../{repo}/blob/{path}`, `GET .../symbols/{id}` |
 | Search | `GET .../search/symbols`, `GET .../search/text`, `GET .../search/semantic` |
-| Answers | `GET/POST .../conversations`, `GET/PATCH/DELETE .../conversations/{id}`, `GET/POST .../conversations/{id}/messages` (and `/stream`), `POST .../ask` (and `/stream`) |
+| Answers | `GET/POST .../conversations`, `GET/PATCH/DELETE .../conversations/{id}`, `GET/POST .../conversations/{id}/messages` (and `/messages/stream`), `POST .../ask` (and `/ask/stream`) |
 | Tasks | `GET/POST .../tasks`, `GET .../tasks/{number}`, `POST .../tasks/{number}/retry`, `POST .../tasks/{number}/cancel` |
-| Review | `GET .../patches/{id}`, `GET .../patches/{id}/export`, `POST .../patches/{id}/comments`, `PATCH/DELETE .../comments/{id}`, `POST .../patches/{id}/approve`, `/reject`, `/apply`, `/test-runs` |
-| Test runs | `GET .../test-runs`, `POST .../repositories/{repo}/test-runs`, `GET .../test-runs/{id}`, `GET .../test-runs/{id}/log` |
+| Review | `GET .../patches/{id}`, `GET .../patches/{id}/export?format=diff\|patch`, `POST .../patches/{id}/comments`, `PATCH/DELETE .../comments/{id}`, `POST .../patches/{id}/approve`, `/reject`, `/apply`, `/test-runs` |
+| Test runs | `GET .../test-runs`, `POST .../repositories/{repo}/test-runs`, `GET .../test-runs/{number or id}`, `GET .../test-runs/{number or id}/log` |
 | Overview | `GET .../overview?days=` |
 | System | `GET /system/info`, `/livez`, `/readyz`, `/metrics` |
 
@@ -355,7 +355,7 @@ The generated reference is [docs/api/openapi.json](../api/openapi.json) (`make o
 | --- | --- |
 | `/login`, `/welcome` | sign-in, first-run setup, the no-workspace state |
 | `/w/[ws]/overview` | stat tiles, test runs per day, tasks by outcome, questions per day, recent work |
-| `/w/[ws]/repos` and `/repos/[repo]` | repository cards with language bars; repository overview with README, languages, snapshots, recent tasks |
+| `/w/[ws]/repos` and `/repos/[repo]` | repository cards with language bars; repository overview with README, languages, index snapshots, test settings, recent tasks and runs |
 | `/w/[ws]/repos/[repo]/code/[...path]` | file tree, highlighted file with line anchors (`#L12-L30`), outline, symbol panel with callers and callees |
 | `/w/[ws]/search` | symbols, text and semantic tabs, results linked to lines |
 | `/w/[ws]/ask` and `/ask/[id]` | streamed cited answers, citation previews with the code |
