@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="t d">
+  <title id="t">Euron CodeAgent architecture</title>
+  <desc id="d">The browser talks to the web app and the API. The API reads and writes PostgreSQL, Valkey and S3 and enqueues jobs on SQS. The worker consumes the queue, indexes repositories, runs the agent and starts sandbox containers that have no network.</desc>
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #0f766e; stroke-width: 1.5; }
+      .data { fill: #f0fdfa; stroke: #14b8a6; stroke-width: 1.5; }
+      .danger { fill: #fff7ed; stroke: #c2410c; stroke-width: 1.5; stroke-dasharray: 6 4; }
+      .t { font: 600 15px Inter, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #0f172a; }
+      .s { font: 12.5px Inter, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #475569; }
+      .h { font: 700 12px Inter, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #0f766e; letter-spacing: 1.5px; }
+      .a { stroke: #0f766e; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .l { font: 12px Inter, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #334155; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#0f766e"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="640" rx="16" fill="#f8fafc"/>
+
+  <text class="h" x="40" y="46">CLIENTS</text>
+  <rect class="box" x="40" y="60" width="260" height="84" rx="12"/>
+  <text class="t" x="60" y="92">Browser</text>
+  <text class="s" x="60" y="114">React, TanStack Query, SSE answers</text>
+  <rect class="box" x="40" y="164" width="260" height="84" rx="12"/>
+  <text class="t" x="60" y="196">CI and scripts</text>
+  <text class="s" x="60" y="218">workspace API keys over REST</text>
+
+  <text class="h" x="380" y="46">APPLICATION</text>
+  <rect class="box" x="380" y="60" width="240" height="84" rx="12"/>
+  <text class="t" x="400" y="92">web (Next.js)</text>
+  <text class="s" x="400" y="114">one image, config from /env.js</text>
+  <rect class="box" x="380" y="164" width="240" height="140" rx="12"/>
+  <text class="t" x="400" y="196">api (FastAPI)</text>
+  <text class="s" x="400" y="218">routes, services, repositories</text>
+  <text class="s" x="400" y="238">auth, search, answers, review</text>
+  <text class="s" x="400" y="258">never runs repository code</text>
+  <text class="s" x="400" y="278">enqueues every slow job</text>
+  <rect class="box" x="380" y="344" width="240" height="140" rx="12"/>
+  <text class="t" x="400" y="376">worker</text>
+  <text class="s" x="400" y="398">indexer, agent, test runner</text>
+  <text class="s" x="400" y="418">git clone, mirror, apply</text>
+  <text class="s" x="400" y="438">reaper (resends lost work)</text>
+  <text class="s" x="400" y="458">only holder of the Docker socket</text>
+
+  <text class="h" x="720" y="46">DATA PLANE</text>
+  <rect class="data" x="720" y="60" width="260" height="84" rx="12"/>
+  <text class="t" x="740" y="92">PostgreSQL 16</text>
+  <text class="s" x="740" y="114">pgvector, pg_trgm: the code index</text>
+  <rect class="data" x="720" y="164" width="260" height="64" rx="12"/>
+  <text class="t" x="740" y="192">Valkey</text>
+  <text class="s" x="740" y="212">caches, rate limits, locks</text>
+  <rect class="data" x="720" y="248" width="260" height="84" rx="12"/>
+  <text class="t" x="740" y="280">S3 (SSE-KMS)</text>
+  <text class="s" x="740" y="302">archives, mirrors, test logs</text>
+  <rect class="data" x="720" y="352" width="260" height="84" rx="12"/>
+  <text class="t" x="740" y="384">SQS + dead-letter queue</text>
+  <text class="s" x="740" y="406">jobs: ids only</text>
+
+  <text class="h" x="380" y="516">SANDBOX</text>
+  <rect class="danger" x="380" y="528" width="600" height="84" rx="12"/>
+  <text class="t" x="400" y="560">one throwaway container per test run</text>
+  <text class="s" x="400" y="582">no network, capabilities dropped, cgroup CPU and memory limits, time limit,</text>
+  <text class="s" x="400" y="600">tree copied in (no bind mounts); a limited subprocess where there is no Docker daemon</text>
+
+  <path class="a" d="M300 102 H380"/>
+  <path class="a" d="M300 206 H380"/>
+  <path class="a" d="M500 144 V164"/>
+  <path class="a" d="M620 190 H670 V102 H720"/>
+  <path class="a" d="M620 204 H720"/>
+  <path class="a" d="M620 232 H680 V290 H720"/>
+  <path class="a" d="M620 262 H660 V380 H720"/>
+  <path class="a" d="M720 408 H640 V420 H620"/>
+  <path class="a" d="M620 470 H700 V312 H720" stroke-dasharray="2 4"/>
+  <path class="a" d="M500 484 V528"/>
+  <text class="l" x="634" y="86">SQL</text>
+  <text class="l" x="632" y="400">enqueue</text>
+  <text class="l" x="646" y="438">receive</text>
+</svg>

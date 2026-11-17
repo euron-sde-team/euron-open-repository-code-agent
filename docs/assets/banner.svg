@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="title desc">
+  <title id="title">Euron CodeAgent</title>
+  <desc id="desc">A repository-aware coding assistant: a code index with symbol search, answers that cite your code, sandboxed test runs and patch proposals that a person reviews.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#04120f"/>
+      <stop offset="0.55" stop-color="#06201c"/>
+      <stop offset="1" stop-color="#0b3b36"/>
+    </linearGradient>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#5eead4" fill-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="320" fill="url(#bg)"/>
+  <rect width="1280" height="320" fill="url(#dots)"/>
+
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="72" y="112" fill="#2dd4bf" font-size="20" font-weight="600" letter-spacing="4">EURON</text>
+    <text x="70" y="172" fill="#ecfeff" font-size="58" font-weight="700">CodeAgent</text>
+    <text x="72" y="216" fill="#99f6e4" font-size="21">A coding assistant that knows your repository.</text>
+    <text x="72" y="246" fill="#99f6e4" font-size="21">Index, search, ask with citations, run tests in a sandbox, review patches.</text>
+    <text x="72" y="286" fill="#2dd4bf" fill-opacity="0.8" font-size="14" letter-spacing="1">OPEN SOURCE  /  MIT  /  SELF-HOST  /  RUNS OFFLINE</text>
+  </g>
+
+  <g transform="translate(760 40)" font-family="'JetBrains Mono', Menlo, Consolas, monospace" font-size="15">
+    <rect width="450" height="240" rx="16" fill="#04100e" stroke="#2dd4bf" stroke-opacity="0.35"/>
+    <circle cx="24" cy="24" r="5" fill="#f87171"/><circle cx="42" cy="24" r="5" fill="#fbbf24"/><circle cx="60" cy="24" r="5" fill="#4ade80"/>
+    <text x="24" y="66" fill="#8b9ba3">18</text>
+    <text x="56" y="66" fill="#d2a8ff">def</text><text x="98" y="66" fill="#79b8ff">apply_discount</text><text x="228" y="66" fill="#a3b2ba">(subtotal, ...):</text>
+    <text x="24" y="92" fill="#8b9ba3">19</text>
+    <text x="56" y="92" fill="#8b9ba3" font-style="italic">"""Take rate off large orders."""</text>
+    <rect x="12" y="102" width="426" height="26" rx="4" fill="#2dd4bf" fill-opacity="0.16"/>
+    <text x="24" y="120" fill="#2dd4bf">20</text>
+    <text x="56" y="120" fill="#d2a8ff">if</text><text x="80" y="120" fill="#e6edf0"> subtotal.amount </text><text x="214" y="120" fill="#f0b072">&gt;=</text><text x="244" y="120" fill="#e6edf0"> threshold.amount:</text>
+    <text x="24" y="148" fill="#8b9ba3">21</text>
+    <text x="56" y="148" fill="#d2a8ff">return</text><text x="112" y="148" fill="#e6edf0"> subtotal - subtotal.times(rate)</text>
+    <rect x="24" y="170" width="402" height="48" rx="10" fill="#0f2b29"/>
+    <text x="38" y="192" fill="#99f6e4" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">test_discount_applies_at_threshold</text>
+    <text x="38" y="210" fill="#4ade80" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">32 of 32 passing after the change, 31 before</text>
+  </g>
+</svg>
