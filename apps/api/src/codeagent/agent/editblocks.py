@@ -87,6 +87,11 @@ def _normalized(lines: list[str]) -> list[str]:
 def apply_edit(content: str | None, edit: Edit) -> str:
     """The file content after one edit. Raises EditError when SEARCH cannot be placed."""
     if not edit.search.strip():
+        if content is not None and content.strip():
+            # An empty SEARCH creates a file; on an existing one it would silently replace it.
+            raise EditError(
+                f"{edit.path} already exists, so an edit to it needs a SEARCH block.", edit.replace
+            )
         return edit.replace
     if content is None:
         raise EditError(
