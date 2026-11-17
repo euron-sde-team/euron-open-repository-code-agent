@@ -14,6 +14,7 @@ locals {
 resource "aws_s3_bucket" "this" {
   #checkov:skip=CKV_AWS_144:Cross-region replication is a deployment decision; the mirror can be rebuilt from the git host or the uploaded archive.
   #checkov:skip=CKV2_AWS_62:No event notifications are needed: the worker polls the database, not the bucket.
+  #checkov:skip=CKV_AWS_21:Versioning is an input (enable_versioning, on in every AWS environment); off only for the local emulator.
   #checkov:skip=CKV_AWS_18:Access logging needs a second bucket; object access is recorded in CloudTrail data events where enabled.
   bucket        = local.bucket
   force_destroy = var.force_destroy
@@ -48,7 +49,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
   versioning_configuration {
-    status = "Enabled"
+    status = var.enable_versioning ? "Enabled" : "Suspended"
   }
 }
 
@@ -56,14 +57,20 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
   rule {
-    id     = "expire-old-versions"
+    id     = "abort-incomplete-multipart"
     status = "Enabled"
+    filter {}
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+
+  rule {
+    id     = "expire-old-versions"
+    status = var.enable_versioning ? "Enabled" : "Disabled"
     filter {}
     noncurrent_version_expiration {
       noncurrent_days = var.noncurrent_version_days
-    }
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 7
     }
   }
 }
@@ -88,7 +95,8 @@ data "aws_iam_policy_document" "tls_only" {
 }
 
 resource "aws_s3_bucket_policy" "tls_only" {
-  count  = var.enforce_tls ? 1 : 0
-  bucket = aws_s3_bucket.this.id
-  policy = data.aws_iam_policy_document.tls_only[0].json
+  count      = var.enforce_tls ? 1 : 0
+  bucket     = aws_s3_bucket.this.id
+  policy     = data.aws_iam_policy_document.tls_only[0].json
+  depends_on = [aws_s3_bucket_public_access_block.this]
 }

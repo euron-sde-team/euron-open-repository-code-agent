@@ -21,6 +21,7 @@ provider "aws" {
   endpoints {
     kms            = var.endpoint
     s3             = var.endpoint
+    s3control      = var.endpoint
     sqs            = var.endpoint
     secretsmanager = var.endpoint
     iam            = var.endpoint

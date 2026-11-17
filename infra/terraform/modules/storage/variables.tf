@@ -14,6 +14,12 @@ variable "enforce_tls" {
   default     = true
 }
 
+variable "enable_versioning" {
+  description = "Keep previous versions of overwritten objects (a mirror overwritten by a bad sync can be restored). On in every AWS environment; off only for the local emulator."
+  type        = bool
+  default     = true
+}
+
 variable "force_destroy" {
   description = "Let terraform destroy delete a bucket that still holds objects (development environments only)."
   type        = bool

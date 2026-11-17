@@ -36,6 +36,8 @@ module "storage" {
   kms_key_arn   = module.kms.key_arn
   enforce_tls   = false # the emulator speaks plain HTTP
   force_destroy = true
+  # The emulator's versioning support is incomplete; the AWS environments keep it on.
+  enable_versioning = false
 }
 
 # Generated secrets are an AWS-deployment concern; locally compose reads
