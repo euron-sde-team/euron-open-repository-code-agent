@@ -9,8 +9,8 @@ from codeagent.agent.diffs import FileChange, build_patch, parse_patch, stats
 
 
 def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(  # noqa: S603
-        ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *args],  # noqa: S607
+    return subprocess.run(
+        ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *args],
         cwd=cwd,
         capture_output=True,
         text=True,
@@ -19,7 +19,9 @@ def git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 CHANGES = [
-    FileChange("app/pricing.py", "def f(x):\n    return x > 1000\n", "def f(x):\n    return x >= 1000\n"),
+    FileChange(
+        "app/pricing.py", "def f(x):\n    return x > 1000\n", "def f(x):\n    return x >= 1000\n"
+    ),
     FileChange("app/new.py", None, "VALUE = 1\n"),
     FileChange("app/old.py", "gone\n", None),
 ]

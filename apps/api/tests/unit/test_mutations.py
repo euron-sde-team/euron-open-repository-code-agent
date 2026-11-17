@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from codeagent.agent.mutations import mutations
 
-SOURCE = '''def apply_discount(subtotal, threshold, rate):
+SOURCE = """def apply_discount(subtotal, threshold, rate):
     if subtotal > threshold:
         return subtotal - subtotal * rate
     return subtotal
@@ -13,7 +13,7 @@ def volume(quantity):
         if quantity >= minimum and quantity < 100:
             return minimum
     return 0
-'''
+"""
 
 
 def test_a_comparison_can_be_relaxed_to_include_the_boundary() -> None:

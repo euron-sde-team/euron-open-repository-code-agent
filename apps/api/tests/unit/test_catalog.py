@@ -21,7 +21,7 @@ def test_the_helper_and_its_tests_pass_together(helper: catalog.Helper, tmp_path
         + helper.render_tests(helper.name)
     )
     (tmp_path / "test_helper.py").write_text(tests)
-    done = subprocess.run(  # noqa: S603
+    done = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "test_helper.py"],
         cwd=tmp_path,
         capture_output=True,

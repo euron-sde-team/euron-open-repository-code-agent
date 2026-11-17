@@ -72,7 +72,7 @@ async def test_rename_rewrites_definition_imports_calls_and_tests(
 
 
 def pytest_in(tree: Path, *args: str) -> tuple[int, str]:
-    done = subprocess.run(  # noqa: S603
+    done = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *args],
         cwd=tree,
         capture_output=True,
@@ -158,9 +158,7 @@ async def test_a_helper_that_already_exists_is_not_added_twice(
     assert caught.value.code == "already_exists"
 
 
-async def test_unknown_helpers_explain_what_is_available(
-    tree: Path, ledgerkit: IndexBuild
-) -> None:
+async def test_unknown_helpers_explain_what_is_available(tree: Path, ledgerkit: IndexBuild) -> None:
     with pytest.raises(PlannerError) as caught:
         await plan(TaskSpec("Add", "add `frobnicate` to ledgerkit/pricing.py"), tree, ledgerkit)
     assert caught.value.code == "unknown_helper"
