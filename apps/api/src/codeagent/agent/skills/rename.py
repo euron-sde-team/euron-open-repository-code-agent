@@ -69,10 +69,10 @@ def _all_ranges(source: str) -> list[tuple[int, int]]:
     return ranges
 
 
-def _choose(view: RepoView, request: RenameRequest) -> SymbolInfo:
+async def _choose(view: RepoView, request: RenameRequest) -> SymbolInfo:
     candidates = [
         s
-        for s in view.index.by_name(request.old)
+        for s in await view.index.by_name(request.old)
         if not view.files.get(s.path) or not view.files[s.path].is_test
     ]
     if request.owner:
@@ -94,10 +94,10 @@ def _choose(view: RepoView, request: RenameRequest) -> SymbolInfo:
     return chosen
 
 
-def _check_new_name(view: RepoView, symbol: SymbolInfo, new: str) -> None:
+async def _check_new_name(view: RepoView, symbol: SymbolInfo, new: str) -> None:
     if not new.isidentifier() or keyword.iskeyword(new):
         raise PlannerError("invalid_name", f"`{new}` is not a valid identifier.")
-    for existing in view.index.by_name(new):
+    for existing in await view.index.by_name(new):
         same_scope = existing.parent_name == symbol.parent_name and (
             existing.path == symbol.path or symbol.kind == "method"
         )
@@ -159,14 +159,14 @@ async def rename(task: TaskSpec, view: RepoView, note: Note) -> PlanResult:
         raise PlannerError(
             "unrecognised", "Describe the rename as: rename `old_name` to `new_name`."
         )
-    symbol = _choose(view, request)
-    _check_new_name(view, symbol, request.new)
+    symbol = await _choose(view, request)
+    await _check_new_name(view, symbol, request.new)
     await note(
         f"Found {symbol.kind} `{symbol.qualified_name}` in `{symbol.path}` "
         f"(line {symbol.start_line})."
     )
 
-    refs = view.index.refs_to(symbol.id)
+    refs = await view.index.refs_to(symbol.id)
     importing = {ref.path for ref in refs if ref.kind == "import"}
     attribute_lines: dict[str, set[int]] = {}
     for ref in refs:
@@ -174,7 +174,7 @@ async def rename(task: TaskSpec, view: RepoView, note: Note) -> PlanResult:
     class_range: tuple[int, int] | None = None
     if symbol.kind == "method" and symbol.parent_name:
         owner = next(
-            (s for s in view.index.by_name(symbol.parent_name) if s.path == symbol.path), None
+            (s for s in await view.index.by_name(symbol.parent_name) if s.path == symbol.path), None
         )
         class_range = (owner.start_line, owner.end_line) if owner else None
 

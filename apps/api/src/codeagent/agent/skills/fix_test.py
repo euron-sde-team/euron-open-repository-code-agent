@@ -73,14 +73,14 @@ def _test_calls(source: str, test_name: str) -> list[str]:
     return []
 
 
-def _targets(view: RepoView, failing: list[CaseResult]) -> list[tuple[SymbolInfo, int]]:
+async def _targets(view: RepoView, failing: list[CaseResult]) -> list[tuple[SymbolInfo, int]]:
     """Non-test functions the failing tests reach: (symbol, distance), nearest first."""
     found: dict[str, tuple[SymbolInfo, int]] = {}
     for case in failing:
         if not case.file or not view.exists(case.file):
             continue
         for name in _test_calls(view.read(case.file), case.name):
-            for symbol in view.index.by_name(name):
+            for symbol in await view.index.by_name(name):
                 info = view.files.get(symbol.path)
                 if info is None or info.is_test or info.language != "Python":
                     continue
@@ -89,7 +89,7 @@ def _targets(view: RepoView, failing: list[CaseResult]) -> list[tuple[SymbolInfo
                     continue
                 found.setdefault(str(symbol.id), (symbol, 0))
     for symbol, _ in list(found.values()):
-        for callee in view.index.callees_of(symbol.id):
+        for callee in await view.index.callees_of(symbol.id):
             info = view.files.get(callee.path)
             if info is not None and not info.is_test and callee.kind in {"function", "method"}:
                 found.setdefault(str(callee.id), (callee, 1))
@@ -124,7 +124,7 @@ async def fix_failing_test(
     await note(
         f"{len(failing)} failing test(s): " + ", ".join(f"`{c.name}`" for c in failing[:4]) + "."
     )
-    targets = _targets(view, failing)
+    targets = await _targets(view, failing)
     if not targets:
         raise PlannerError(
             "no_targets", "Could not find the code the failing test calls in the index."
