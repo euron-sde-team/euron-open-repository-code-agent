@@ -64,7 +64,7 @@ test("a requested helper is reviewed, approved and applied to a branch", async (
     .first()
     .click({ force: true });
   await page.getByLabel(/^Comment on line \d+$/).fill("Please also cover negative bounds.");
-  await page.getByRole("button", { name: "Comment", exact: true }).click();
+  await diff.getByRole("button", { name: "Comment", exact: true }).click();
   await expect(diff.getByText("Please also cover negative bounds.")).toBeVisible();
 
   await page.getByLabel("Decision note").fill("Looks right.");
@@ -74,7 +74,7 @@ test("a requested helper is reviewed, approved and applied to a branch", async (
 
   await page.getByRole("button", { name: "Apply to a new branch" }).click();
   await expect(page.getByText("Applied to a branch")).toBeVisible({ timeout: 90_000 });
-  await expect(page.getByText(/codeagent\/1-add-a-clamp-helper/)).toBeVisible();
+  await expect(page.getByText(/codeagent\/1-add-a-clamp-helper/).first()).toBeVisible();
 
   // The export is a real download.
   const [download] = await Promise.all([
