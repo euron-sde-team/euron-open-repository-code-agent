@@ -139,3 +139,12 @@ def test_independent_review_blocks_the_requester_but_not_others() -> None:
     ws = decision_workspace(True)
     assert not can_decide(t, patch(), Principal(user=requester), Role.OWNER, ws)
     assert can_decide(t, patch(), Principal(user=other), Role.MAINTAINER, ws)
+
+
+def test_symbol_names_keep_their_class_but_drop_the_module() -> None:
+    from codeagent.services.retrieval import short_name
+
+    assert short_name("ledgerkit.invoice.Invoice.tax") == "Invoice.tax"
+    assert short_name("ledgerkit.tax.calc_tax") == "calc_tax"
+    assert short_name("Limiter.Allow") == "Limiter.Allow"
+    assert short_name("calc_tax") == "calc_tax"

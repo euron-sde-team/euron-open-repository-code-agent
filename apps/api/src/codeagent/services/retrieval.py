@@ -39,10 +39,24 @@ class Retrieved:
     focus: list[uuid.UUID]
 
 
-def _location(edge: EdgeRow) -> Location:
-    return Location(
-        edge.name.rsplit(".", 1)[-1] if "." in edge.name else edge.name, edge.path, edge.line
-    )
+def short_name(qualified: str) -> str:
+    """`pkg.mod.Invoice.tax` as `Invoice.tax`, `pkg.mod.calc_tax` as `calc_tax`."""
+    parts = qualified.split(".")
+    if len(parts) >= 2 and parts[-2][:1].isupper():
+        return ".".join(parts[-2:])
+    return parts[-1]
+
+
+def _locations(edges: Sequence[EdgeRow]) -> list[Location]:
+    """Edges as places, once per symbol and file (a test calling a function twice is one test)."""
+    seen: set[tuple[str, str]] = set()
+    found: list[Location] = []
+    for edge in edges:
+        name = short_name(edge.name)
+        if (name, edge.path) not in seen:
+            seen.add((name, edge.path))
+            found.append(Location(name, edge.path, edge.line))
+    return found
 
 
 class RetrievalService:
@@ -156,17 +170,13 @@ class RetrievalService:
                     end_line=symbol.end_line,
                     signature=symbol.signature,
                     doc=symbol.doc,
-                    callers=[
-                        _location(e)
-                        for e in incoming
-                        if e.kind in {"call", "inherit"} and not e.is_test
-                    ],
-                    callees=[_location(e) for e in outgoing if not e.is_test],
-                    tests=[
-                        _location(e)
-                        for e in incoming
-                        if e.kind in {"call", "inherit"} and e.is_test
-                    ],
+                    callers=_locations(
+                        [e for e in incoming if e.kind in {"call", "inherit"} and not e.is_test]
+                    ),
+                    callees=_locations([e for e in outgoing if not e.is_test]),
+                    tests=_locations(
+                        [e for e in incoming if e.kind in {"call", "inherit"} and e.is_test]
+                    ),
                 )
             )
         return result
