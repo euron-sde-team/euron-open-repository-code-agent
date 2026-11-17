@@ -32,6 +32,7 @@ class FileEntry:
 @dataclass(frozen=True, slots=True)
 class SymbolRow:
     id: uuid.UUID
+    snapshot_id: uuid.UUID
     name: str
     qualified_name: str
     kind: str
@@ -64,6 +65,7 @@ def _symbol_row(
 ) -> SymbolRow:
     return SymbolRow(
         id=symbol.id,
+        snapshot_id=symbol.snapshot_id,
         name=symbol.name,
         qualified_name=symbol.qualified_name,
         kind=symbol.kind,
@@ -166,6 +168,24 @@ class IndexRepository(Store):
             .limit(limit)
         )
         return [_symbol_row(*row) for row in result.all()]
+
+    async def top_symbols(self, snapshot_id: uuid.UUID, limit: int) -> list[SymbolRow]:
+        """Top-level definitions outside tests, most referenced first."""
+        result = await self.session.execute(
+            select(Symbol, RepoFile.path, RepoFile.language, RepoFile.is_test)
+            .join(RepoFile, RepoFile.id == Symbol.file_id)
+            .where(
+                Symbol.snapshot_id == snapshot_id,
+                Symbol.parent_id.is_(None),
+                RepoFile.is_test.is_(False),
+            )
+            .order_by(Symbol.ref_count.desc(), RepoFile.path, Symbol.start_line)
+            .limit(limit)
+        )
+        return [
+            _symbol_row(symbol, path, language, None, is_test)
+            for symbol, path, language, is_test in result.all()
+        ]
 
     async def symbols_by_id(self, symbol_ids: Sequence[uuid.UUID]) -> list[SymbolRow]:
         if not symbol_ids:
