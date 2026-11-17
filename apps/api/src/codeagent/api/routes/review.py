@@ -180,10 +180,10 @@ def _need_person(access: AccessDep) -> None:
 @router.post("/workspaces/{workspace}/patches/{patch_id}/approve", summary="Approve a proposal")
 async def approve(
     patch_id: uuid.UUID,
-    body: DecisionRequest,
     access: AccessDep,
     container: ContainerDep,
     session: SessionDep,
+    body: DecisionRequest = DecisionRequest(),
 ) -> PatchOut:
     access.require(Role.MAINTAINER)
     _need_person(access)
@@ -196,10 +196,10 @@ async def approve(
 @router.post("/workspaces/{workspace}/patches/{patch_id}/reject", summary="Reject a proposal")
 async def reject(
     patch_id: uuid.UUID,
-    body: DecisionRequest,
     access: AccessDep,
     container: ContainerDep,
     session: SessionDep,
+    body: DecisionRequest = DecisionRequest(),
 ) -> PatchOut:
     access.require(Role.MAINTAINER)
     _need_person(access)
@@ -216,10 +216,10 @@ async def reject(
 )
 async def apply(
     patch_id: uuid.UUID,
-    body: ApplyRequest,
     access: AccessDep,
     container: ContainerDep,
     session: SessionDep,
+    body: ApplyRequest = ApplyRequest(),
 ) -> PatchOut:
     access.require(Role.MAINTAINER)
     _need_person(access)

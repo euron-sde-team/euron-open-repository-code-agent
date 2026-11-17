@@ -131,10 +131,10 @@ async def get_task(
 )
 async def retry_task(
     ref: str,
-    body: TaskRetry,
     access: AccessDep,
     container: ContainerDep,
     session: SessionDep,
+    body: TaskRetry = TaskRetry(),
 ) -> TaskDetail:
     access.require(Role.DEVELOPER)
     service = TaskService(container, session)
