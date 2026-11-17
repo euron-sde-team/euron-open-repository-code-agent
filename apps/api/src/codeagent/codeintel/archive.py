@@ -166,10 +166,15 @@ def strip_single_root(dest: Path) -> str | None:
     if len(entries) != 1 or not entries[0].is_dir():
         return None
     root = entries[0]
-    for child in list(root.iterdir()):
+    name = root.name
+    # Move the wrapper aside first: a package often has the repository's own name
+    # (`ledgerkit/ledgerkit/`), and its children must not collide with the wrapper itself.
+    staging = dest / ".codeagent-unwrap"
+    root.rename(staging)
+    for child in list(staging.iterdir()):
         shutil.move(str(child), dest / child.name)
-    root.rmdir()
-    return root.name
+    staging.rmdir()
+    return name
 
 
 def extract(archive: Path, dest: Path, fmt: ArchiveFormat, limits: ArchiveLimits) -> ExtractStats:

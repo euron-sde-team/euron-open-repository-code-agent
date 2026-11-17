@@ -50,6 +50,20 @@ def test_a_zip_is_extracted_and_its_single_root_folder_is_unwrapped(tmp_path: Pa
     assert (tmp_path / "out" / "lib" / "util.py").exists()
 
 
+def test_a_wrapper_folder_named_like_a_child_is_unwrapped_without_a_collision(
+    tmp_path: Path,
+) -> None:
+    archive = tmp_path / "ledgerkit.zip"
+    make_zip(
+        archive,
+        {"ledgerkit/ledgerkit/__init__.py": b"", "ledgerkit/tests/test_a.py": b"x = 1\n"},
+    )
+    stats = extract(archive, tmp_path / "out", "zip", LIMITS)
+    assert stats.stripped_prefix == "ledgerkit"
+    assert (tmp_path / "out" / "ledgerkit" / "__init__.py").exists()
+    assert (tmp_path / "out" / "tests" / "test_a.py").exists()
+
+
 def test_a_tar_gz_is_extracted(tmp_path: Path) -> None:
     archive = tmp_path / "repo.tar.gz"
     make_tar(archive, {"a.txt": b"one", "b/c.txt": b"two"})
