@@ -45,7 +45,9 @@ def classify(question: str) -> Intent:
         r"\b(who|what|which|where)\b.*\b(calls?|uses?|invokes?|depends? on|imports?)\b", q
     ) or re.search(r"\b(usages?|callers?|called from|used by|references to|where is .* used)\b", q):
         return Intent.USAGES
-    if re.search(r"\b(tests?|tested|covered|coverage|specs?)\b", q):
+    # "What does X do and which tests cover it?" is an explanation that includes the tests.
+    asks_to_explain = re.search(r"\bwhat (does|do) \S+ do\b|\b(explain|describe)\b", q)
+    if re.search(r"\b(tests?|tested|covered|coverage|specs?)\b", q) and not asks_to_explain:
         return Intent.TESTS
     if re.search(
         r"\bwhere\b.*\b(defined|declared|implemented|live|lives|located|is the code)\b", q
@@ -137,12 +139,27 @@ def _focus(request: AnswerRequest) -> list[SymbolFacts]:
     return []
 
 
+def _mentions_the_question(request: AnswerRequest) -> bool:
+    """Whether any top source shares a word with the question (names, path or code)."""
+    wanted = set(terms(request.question))
+    if not wanted:
+        return False
+    for source in request.sources[:5]:
+        haystack = f"{source.path} {source.qualified_name or ''} {source.text}"
+        if wanted & set(terms(haystack)):
+            return True
+    return False
+
+
 def compose(request: AnswerRequest) -> str:
     if not request.sources:
         return NOT_FOUND
     writer = _Writer(request)
     intent = classify(request.question)
     focus = _focus(request)
+    if not request.focus and not _mentions_the_question(request):
+        # Retrieval always returns the nearest chunks; being near is not being relevant.
+        return NOT_FOUND
     if intent is not Intent.OVERVIEW and focus:
         fact = focus[0]
         if intent is Intent.USAGES:
