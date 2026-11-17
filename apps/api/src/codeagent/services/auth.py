@@ -38,7 +38,7 @@ class AuthService:
         self.session = session
         self.users = UserRepository(session)
 
-    def _issue(self, user: User) -> tuple[str, SessionClaims]:
+    def issue(self, user: User) -> tuple[str, SessionClaims]:
         return issue_session(
             user.id,
             user.session_version,
@@ -70,7 +70,7 @@ class AuthService:
         user.locked_until = None
         user.last_login_at = now
         await self.session.commit()
-        token, claims = self._issue(user)
+        token, claims = self.issue(user)
         return user, token, claims
 
     async def resolve(self, token: str) -> tuple[User, SessionClaims]:
@@ -117,7 +117,7 @@ class AuthService:
         # Every other session (other browsers, stolen cookies) ends now.
         user.session_version += 1
         await self.session.commit()
-        return self._issue(user)
+        return self.issue(user)
 
     async def update_profile(self, user: User, name: str) -> User:
         user.name = name.strip()
