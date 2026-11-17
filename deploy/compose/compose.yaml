@@ -122,7 +122,19 @@ services:
       # The API applies the migrations on boot; the worker starts once they are in.
       api:
         condition: service_healthy
+      sandbox-image:
+        condition: service_completed_successfully
     restart: unless-stopped
+
+  # Builds the image every sandboxed test run starts in, then exits. The worker waits for it,
+  # so the first run never fails on a missing image.
+  sandbox-image:
+    build:
+      context: ../..
+      dockerfile: infra/docker/sandbox.Dockerfile
+    image: codeagent-sandbox:local
+    command: ["python", "--version"]
+    restart: "no"
 
   web:
     build:
