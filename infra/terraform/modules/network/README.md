@@ -4,21 +4,21 @@ VPC across 2-3 AZs: public subnets (ALB, NAT) and private subnets (ECS tasks, RD
 
 ## Inputs
 
-| Name | Description | Type | Default |
-|---|---|---|---|
-| `name_prefix` | Prefix for every resource name, e.g. "codeagent-prod". | `string` | required |
-| `cidr_block` | VPC CIDR. Split into /20 public subnets (low half) and /20 private subnets (high half). | `string` | `"10.40.0.0/16"` |
-| `az_count` | Number of availability zones to span (2 or 3). | `number` | `3` |
-| `single_nat_gateway` | One shared NAT gateway (cheaper, dev) instead of one per AZ (resilient, prod). | `bool` | `true` |
-| `logs_kms_key_arn` | CMK that encrypts the flow-log group. Null uses CloudWatch's default encryption. | `string` | `null` |
-| `flow_log_retention_days` | Retention for VPC flow logs (REJECT + ACCEPT) in CloudWatch Logs. 0 disables flow logs. | `number` | `30` |
-| `enable_interface_endpoints` | Create KMS, Secrets Manager and SQS interface endpoints so those calls never leave the VPC. | `bool` | `true` |
+| Name                         | Description                                                                                 | Type     | Default          |
+| ---------------------------- | ------------------------------------------------------------------------------------------- | -------- | ---------------- |
+| `name_prefix`                | Prefix for every resource name, e.g. "codeagent-prod".                                      | `string` | required         |
+| `cidr_block`                 | VPC CIDR. Split into /20 public subnets (low half) and /20 private subnets (high half).     | `string` | `"10.40.0.0/16"` |
+| `az_count`                   | Number of availability zones to span (2 or 3).                                              | `number` | `3`              |
+| `single_nat_gateway`         | One shared NAT gateway (cheaper, dev) instead of one per AZ (resilient, prod).              | `bool`   | `true`           |
+| `logs_kms_key_arn`           | CMK that encrypts the flow-log group. Null uses CloudWatch's default encryption.            | `string` | `null`           |
+| `flow_log_retention_days`    | Retention for VPC flow logs (REJECT + ACCEPT) in CloudWatch Logs. 0 disables flow logs.     | `number` | `30`             |
+| `enable_interface_endpoints` | Create KMS, Secrets Manager and SQS interface endpoints so those calls never leave the VPC. | `bool`   | `true`           |
 
 ## Outputs
 
-| Name | Description |
-|---|---|
-| `vpc_id` | VPC id. |
-| `vpc_cidr_block` | VPC CIDR. |
-| `public_subnet_ids` | Public subnets (ALB, NAT). |
+| Name                 | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| `vpc_id`             | VPC id.                                               |
+| `vpc_cidr_block`     | VPC CIDR.                                             |
+| `public_subnet_ids`  | Public subnets (ALB, NAT).                            |
 | `private_subnet_ids` | Private subnets (ECS tasks, RDS, Valkey), one per AZ. |

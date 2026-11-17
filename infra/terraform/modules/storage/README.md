@@ -8,18 +8,18 @@ The repository bucket `<name_prefix>-repositories`: uploaded archives, each repo
 
 ## Inputs
 
-| Name | Description | Type | Default |
-|---|---|---|---|
-| `name_prefix` | Prefix for the bucket name. | `string` | required |
-| `kms_key_arn` | CMK that encrypts every object. | `string` | required |
-| `enforce_tls` | Deny non-TLS requests. | `bool` | `true` |
-| `enable_versioning` | Keep previous object versions. | `bool` | `true` |
-| `force_destroy` | Let destroy delete a non-empty bucket. | `bool` | `false` |
-| `noncurrent_version_days` | Days old versions are kept. | `number` | `30` |
+| Name                      | Description                            | Type     | Default  |
+| ------------------------- | -------------------------------------- | -------- | -------- |
+| `name_prefix`             | Prefix for the bucket name.            | `string` | required |
+| `kms_key_arn`             | CMK that encrypts every object.        | `string` | required |
+| `enforce_tls`             | Deny non-TLS requests.                 | `bool`   | `true`   |
+| `enable_versioning`       | Keep previous object versions.         | `bool`   | `true`   |
+| `force_destroy`           | Let destroy delete a non-empty bucket. | `bool`   | `false`  |
+| `noncurrent_version_days` | Days old versions are kept.            | `number` | `30`     |
 
 ## Outputs
 
-| Name | Description |
-|---|---|
-| `bucket` | `S3_BUCKET` for the API and the worker. |
-| `bucket_arn` | Bucket ARN, for IAM policies. |
+| Name         | Description                             |
+| ------------ | --------------------------------------- |
+| `bucket`     | `S3_BUCKET` for the API and the worker. |
+| `bucket_arn` | Bucket ARN, for IAM policies.           |

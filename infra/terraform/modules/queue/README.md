@@ -9,22 +9,22 @@ The visibility timeout (1020 seconds) is the worker's `JOB_TIMEOUT_S` (900) plus
 
 ## Inputs
 
-| Name | Description | Type | Default |
-|---|---|---|---|
-| `name_prefix` | Prefix for every resource name. Queues are <name_prefix>-jobs and <name_prefix>-jobs-dlq. | `string` | required |
-| `kms_key_arn` | CMK for server-side encryption. Null uses SQS-managed encryption. | `string` | `null` |
-| `visibility_timeout_seconds` | How long a received message stays hidden. | `number` | `120` |
-| `message_retention_seconds` | How long an undelivered message is kept. | `number` | `345600` |
-| `max_receive_count` | Receives before a message moves to the dead-letter queue. | `number` | `3` |
-| `enforce_tls` | Deny requests that do not use TLS with a queue policy. | `bool` | `true` |
+| Name                         | Description                                                                               | Type     | Default  |
+| ---------------------------- | ----------------------------------------------------------------------------------------- | -------- | -------- |
+| `name_prefix`                | Prefix for every resource name. Queues are <name_prefix>-jobs and <name_prefix>-jobs-dlq. | `string` | required |
+| `kms_key_arn`                | CMK for server-side encryption. Null uses SQS-managed encryption.                         | `string` | `null`   |
+| `visibility_timeout_seconds` | How long a received message stays hidden.                                                 | `number` | `120`    |
+| `message_retention_seconds`  | How long an undelivered message is kept.                                                  | `number` | `345600` |
+| `max_receive_count`          | Receives before a message moves to the dead-letter queue.                                 | `number` | `3`      |
+| `enforce_tls`                | Deny requests that do not use TLS with a queue policy.                                    | `bool`   | `true`   |
 
 ## Outputs
 
-| Name | Description |
-|---|---|
-| `queue_url` | SQS_QUEUE_URL for the API and the worker. |
-| `queue_arn` | Webhook queue ARN, for IAM policies. |
-| `queue_name` | Webhook queue name, for CloudWatch alarms. |
-| `dlq_url` | Dead-letter queue URL. |
-| `dlq_arn` | Dead-letter queue ARN. |
-| `dlq_name` | Dead-letter queue name, for CloudWatch alarms. |
+| Name         | Description                                    |
+| ------------ | ---------------------------------------------- |
+| `queue_url`  | SQS_QUEUE_URL for the API and the worker.      |
+| `queue_arn`  | Webhook queue ARN, for IAM policies.           |
+| `queue_name` | Webhook queue name, for CloudWatch alarms.     |
+| `dlq_url`    | Dead-letter queue URL.                         |
+| `dlq_arn`    | Dead-letter queue ARN.                         |
+| `dlq_name`   | Dead-letter queue name, for CloudWatch alarms. |
