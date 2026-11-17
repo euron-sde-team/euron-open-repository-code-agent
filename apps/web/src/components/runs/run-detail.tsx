@@ -169,7 +169,10 @@ export function RunDetailView({ number }: { number: number }) {
           </div>
         </CardHeader>
         <CardContent>
-          <code className="bg-code border-border block overflow-x-auto rounded-lg border px-3 py-2 font-mono text-[12.5px]">
+          <code
+            tabIndex={0}
+            className="bg-code border-border block overflow-x-auto rounded-lg border px-3 py-2 font-mono text-[12.5px]"
+          >
             {data.command}
           </code>
         </CardContent>
@@ -243,7 +246,11 @@ export function RunDetailView({ number }: { number: number }) {
         <CardContent>
           {data.log_tail ? (
             <>
-              <pre className="bg-code border-border scroll-quiet max-h-[28rem] overflow-auto rounded-lg border p-3 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap">
+              <pre
+                tabIndex={0}
+                aria-label="Run log"
+                className="bg-code border-border scroll-quiet max-h-[28rem] overflow-auto rounded-lg border p-3 font-mono text-[12px] leading-relaxed break-words whitespace-pre-wrap"
+              >
                 {data.log_tail}
               </pre>
               {data.log_truncated ? (

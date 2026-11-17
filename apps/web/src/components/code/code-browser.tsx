@@ -48,9 +48,23 @@ function Outline({
               symbol.id === activeId ? "bg-accent text-accent-foreground" : "hover:bg-muted",
             )}
           >
-            <span className="text-subtle w-14 shrink-0 text-[10.5px] tracking-wide uppercase">{symbol.kind}</span>
+            <span
+              className={cn(
+                "w-14 shrink-0 text-[10.5px] tracking-wide uppercase",
+                symbol.id === activeId ? "text-accent-foreground" : "text-subtle",
+              )}
+            >
+              {symbol.kind}
+            </span>
             <span className="min-w-0 truncate font-mono">{symbol.name}</span>
-            <span className="text-subtle tabular ml-auto shrink-0 text-[11px]">{symbol.start_line}</span>
+            <span
+              className={cn(
+                "tabular ml-auto shrink-0 text-[11px]",
+                symbol.id === activeId ? "text-accent-foreground" : "text-subtle",
+              )}
+            >
+              {symbol.start_line}
+            </span>
           </button>
         </li>
       ))}

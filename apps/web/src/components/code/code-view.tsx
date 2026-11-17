@@ -38,6 +38,7 @@ export function CodeView({ lines, hash, file }: { lines: CodeLine[]; hash: strin
 
   return (
     <pre
+      tabIndex={0}
       className="bg-code scroll-quiet overflow-x-auto py-2 font-mono text-[12.5px] leading-[1.65]"
       aria-label={`Source of ${file}`}
     >

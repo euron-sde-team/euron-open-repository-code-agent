@@ -208,7 +208,12 @@ function FileDiff({
           ))}
         </div>
       ) : null}
-      <div className="bg-code scroll-quiet overflow-x-auto font-mono text-[12.5px] leading-[1.6]">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label={`Diff of ${file.path}`}
+        className="bg-code scroll-quiet overflow-x-auto font-mono text-[12.5px] leading-[1.6]"
+      >
         <div className="min-w-max">
           {file.hunks.map((hunk, index) => (
             <div key={`${hunk.old_start}-${hunk.new_start}-${index}`}>

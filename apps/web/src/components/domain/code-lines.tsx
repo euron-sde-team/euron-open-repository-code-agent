@@ -31,6 +31,7 @@ export function CodeSnippet({
 }) {
   return (
     <pre
+      tabIndex={0}
       className={cn(
         "bg-code border-border scroll-quiet overflow-x-auto rounded-lg border py-2 font-mono text-[12.5px] leading-[1.6]",
         className,

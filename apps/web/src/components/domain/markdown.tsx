@@ -84,6 +84,7 @@ export function Markdown({
             return (
               <pre
                 key={index}
+                tabIndex={0}
                 className="bg-code border-border scroll-quiet overflow-x-auto rounded-lg border p-3 font-mono text-[12.5px] leading-relaxed"
               >
                 <code>{block.text}</code>
