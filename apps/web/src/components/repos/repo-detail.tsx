@@ -98,7 +98,7 @@ function Related({ workspace, repo }: { workspace: string; repo: string }) {
   const tasks = useTasks(workspace, { repository: repo, limit: 5 });
   const runs = useRuns(workspace, { repository: repo, limit: 5 });
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card>
         <CardHeader>
           <CardTitle>Recent tasks</CardTitle>
@@ -331,7 +331,7 @@ export function RepoDetail({ repo }: { repo: string }) {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader>
             <CardTitle>{data.readme_path ?? "README"}</CardTitle>

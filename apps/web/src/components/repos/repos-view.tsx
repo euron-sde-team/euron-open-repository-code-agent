@@ -117,7 +117,7 @@ function ReposBody() {
       {repositories.error ? (
         <ErrorState message={repositories.error.message} onRetry={() => repositories.refetch()} />
       ) : !repositories.data ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-busy>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" aria-busy>
           {[0, 1, 2].map((i) => (
             <Skeleton key={i} className="h-44" />
           ))}
@@ -141,7 +141,7 @@ function ReposBody() {
         </Card>
       ) : (
         <>
-          <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {items.map((repository) => (
               <li key={repository.id} className="contents">
                 <RepoCard repository={repository} workspace={slug} />

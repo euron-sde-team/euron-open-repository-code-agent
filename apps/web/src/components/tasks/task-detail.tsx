@@ -37,7 +37,7 @@ function PatchSection({ taskNumber, patchId }: { taskNumber: number; patchId: st
   const editable = canComment && (data.status === "proposed" || data.status === "approved");
   const general = groupComments(data.comments).general;
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
       <div className="min-w-0 space-y-5">
         <section aria-label="Why this change">
           <h2 className="text-[15px] font-semibold tracking-tight">{data.summary}</h2>
