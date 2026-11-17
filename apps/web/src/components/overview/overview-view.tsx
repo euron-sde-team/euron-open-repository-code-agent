@@ -113,7 +113,7 @@ export function OverviewView() {
             />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Test runs per day</CardTitle>
@@ -153,7 +153,7 @@ export function OverviewView() {
             </Card>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
             <Card>
               <CardHeader>
                 <CardTitle>Tasks by outcome</CardTitle>
