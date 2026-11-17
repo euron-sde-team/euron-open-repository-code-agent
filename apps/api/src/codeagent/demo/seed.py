@@ -49,7 +49,7 @@ from codeagent.services.users import create_user
 from codeagent.services.workspaces import WorkspaceService
 
 log = get_logger("codeagent.demo")
-WORKSPACE_SLUG = "northwind"
+WORKSPACE_SLUG = "northwind-engineering"
 REPOS_DIR = Path(__file__).parent / "repos"
 WAIT_S = 240
 
