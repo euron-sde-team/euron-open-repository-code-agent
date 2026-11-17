@@ -119,10 +119,12 @@ async function crawlWorkspace(page: Page, crawl: Crawl): Promise<void> {
   await visit(crawl, "repo", `${base}/repos/ledgerkit`, "ledgerkit");
   await visit(crawl, "repo-go", `${base}/repos/ratelimit`, "ratelimit");
   await visit(crawl, "code-index", `${base}/repos/ledgerkit/code`, { text: "Choose a file" });
-  await visit(crawl, "code-file", `${base}/repos/ledgerkit/code/ledgerkit/pricing.py#L18-L24`, {
-    text: "ledgerkit / pricing.py",
-  });
-  await visit(crawl, "code-typescript", `${base}/repos/checkout-web/code/src/cart.ts`, { text: "cart.ts" });
+  await visit(crawl, "code-file", `${base}/repos/ledgerkit/code/ledgerkit/pricing.py#L18-L24`);
+  await expect(page.getByLabel("Source of ledgerkit/pricing.py")).toBeVisible();
+  await inspect(crawl, "code-file-loaded");
+  await visit(crawl, "code-typescript", `${base}/repos/checkout-web/code/src/cart.ts`);
+  await expect(page.getByLabel("Source of src/cart.ts")).toBeVisible();
+  await inspect(crawl, "code-typescript-loaded");
 
   await visit(crawl, "search-symbols", `${base}/search?q=discount`, "Search");
   await expect(page.getByRole("link", { name: /apply_discount/ }).first()).toBeVisible();
