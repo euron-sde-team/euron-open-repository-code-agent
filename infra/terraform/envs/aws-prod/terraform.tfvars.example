@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars and fill in. Never commit terraform.tfvars.
+name_prefix     = "codeagent-prod"
+hostname        = "codeagent.example.com"
+route53_zone_id = "Z0000000000000000000"
+alarm_email     = "oncall@example.com"
+
+# Optional: answers and patches from a hosted model instead of the offline local engine.
+# llm_provider           = "openai"
+# llm_model              = "gpt-4.1-mini"
+# llm_api_key_secret_arn = "arn:aws:secretsmanager:us-east-1:000000000000:secret:codeagent/llm:LLM_API_KEY::"
