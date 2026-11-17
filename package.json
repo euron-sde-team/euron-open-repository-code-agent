@@ -1,0 +1,26 @@
+{
+  "name": "euron-code-agent",
+  "private": true,
+  "description": "Euron CodeAgent: a repository-aware coding assistant with a code index, cited answers, sandboxed test runs and reviewed patches.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @codeagent/web dev",
+    "lint": "pnpm -r --parallel lint",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm --filter @codeagent/web test",
+    "build": "pnpm --filter @codeagent/web build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "e2e": "pnpm --filter @codeagent/e2e test",
+    "qa": "pnpm --filter @codeagent/e2e qa",
+    "capture": "pnpm --filter @codeagent/e2e capture"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "prettier-plugin-tailwindcss": "0.8.1"
+  }
+}
