@@ -71,10 +71,10 @@ test("text search highlights the match and supports regular expressions", async 
   await expect(page.getByRole("link", { name: /ledgerkit \/ ledgerkit\/pricing\.py/ })).toBeVisible();
   await expect(page.locator("mark").first()).toHaveText("volume_discount");
   await page.getByRole("checkbox", { name: "Regular expression" }).click();
-  await page.getByLabel("Search the code").fill("def (calc|rate)_\\w+");
+  await page.getByRole("searchbox", { name: "Search the code" }).fill("def (calc|rate)_\\w+");
   await expect(page.getByRole("link", { name: /ledgerkit\/tax\.py/ }).first()).toBeVisible();
   // A catastrophic pattern is refused with an explanation, not run.
-  await page.getByLabel("Search the code").fill("(a+)+$");
+  await page.getByRole("searchbox", { name: "Search the code" }).fill("(a+)+$");
   await expect(page.getByText("Nested quantifiers")).toBeVisible();
 });
 

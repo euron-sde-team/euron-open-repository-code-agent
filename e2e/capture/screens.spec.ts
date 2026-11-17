@@ -114,17 +114,17 @@ test("the web app, page by page", async ({ page }) => {
   await shot(page, "11-task-applied");
 
   await page.goto(`${BASE}/runs`);
-  await expect(page.getByRole("table", { name: "Test runs" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Test runs" })).toBeVisible();
   await shot(page, "12-test-runs");
   await tourFrame(page, 2000);
 
   await page.goto(`${BASE}/runs/${run.number}`);
-  await expect(page.getByRole("table", { name: "Test results" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Test results" })).toBeVisible();
   await shot(page, "13-test-run");
   await tourFrame(page, 2600);
 
   await page.goto(`${BASE}/settings?tab=keys`);
-  await expect(page.getByRole("table", { name: "API keys" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "API keys" })).toBeVisible();
   await shot(page, "14-api-keys");
 
   await page.goto(`${BASE}/settings?tab=engine`);

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { PEOPLE, WORKSPACE, requirePassword, signIn } from "../helpers";
+import { PEOPLE, WORKSPACE, requirePassword, signIn, signInWithForm } from "../helpers";
 
 test("the owner signs in and lands on the workspace overview", async ({ page }) => {
   await signIn(page, "owner");
@@ -31,7 +31,8 @@ test("signed-out visitors are sent to sign in, then back where they were going",
 });
 
 test("signing out ends the session", async ({ page }) => {
-  await signIn(page, "viewer");
+  // Its own sign-in: signing out revokes the session, and the shared one must stay valid.
+  await signInWithForm(page, "viewer");
   await page.getByRole("button", { name: `Account menu for ${PEOPLE.viewer.name}` }).click();
   await page.getByRole("menuitem", { name: "Sign out" }).click();
   await expect(page).toHaveURL(/\/login/);

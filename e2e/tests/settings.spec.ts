@@ -70,7 +70,7 @@ test("the engine page says what runs offline and how the sandbox is limited", as
 test("the audit trail shows who did what", async ({ page }) => {
   await signIn(page, "owner");
   await page.goto(`/w/${WORKSPACE}/settings?tab=activity`);
-  const table = page.getByRole("table", { name: "Audit trail" });
+  const table = page.getByRole("region", { name: "Audit trail" });
   await expect(table).toContainText("Patch approved");
   await expect(table).toContainText("Marcus Lee");
 });

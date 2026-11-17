@@ -34,7 +34,7 @@ test("the repository's tests run in the sandbox and the failure is explained", a
   await expect(page).toHaveURL(new RegExp(`/w/${workspace}/runs/\\d+$`));
   await expect(page.getByText("Failed", { exact: true }).first()).toBeVisible({ timeout: 120_000 });
   await expect(page.getByText("31 / 32")).toBeVisible();
-  const row = page.getByRole("row", { name: /test_discount_applies_at_threshold/ });
+  const row = page.getByRole("row", { name: /^test_discount_applies_at_threshold/ });
   await expect(row).toBeVisible();
   await expect(page.getByRole("main")).toContainText("assert");
   await expect(page.getByText("no network", { exact: false }).or(page.getByText("network: none"))).toBeVisible();
