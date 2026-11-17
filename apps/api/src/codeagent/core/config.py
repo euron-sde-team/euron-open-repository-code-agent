@@ -70,6 +70,11 @@ class Settings(BaseSettings):
     worker_concurrency: int = Field(default=2, ge=1, le=32)
     job_timeout_s: int = Field(default=900, ge=30)
     stale_job_minutes: int = Field(default=20, ge=1)
+    worker_poll_wait_s: int = Field(default=10, ge=0, le=20)
+    maintenance_interval_s: int = Field(default=60, ge=10)
+    # The reaper leaves stuck work alone while the queue holds more than this many messages:
+    # resending into a backlog only makes it longer.
+    reaper_max_backlog: int = Field(default=50, ge=1)
 
     # Repositories and the index
     max_archive_mb: int = Field(default=100, ge=1, le=2048)
@@ -148,6 +153,16 @@ class Settings(BaseSettings):
     @property
     def max_archive_bytes(self) -> int:
         return self.max_archive_mb * 1024 * 1024
+
+    @property
+    def max_request_bytes(self) -> int:
+        # An archive upload plus its multipart framing; every other body is far smaller.
+        return self.max_archive_bytes + 1024 * 1024
+
+    @property
+    def worker_visibility_s(self) -> int:
+        # A received job stays hidden while it runs; the worker also extends it.
+        return self.job_timeout_s + 120
 
     @property
     def max_file_bytes(self) -> int:
