@@ -17,14 +17,14 @@ make up
 The first run builds three images and applies Terraform to the Floci emulator, which takes a
 few minutes. It starts:
 
-| Service | Port | Role |
-| --- | --- | --- |
-| web | 3190 | The web app |
-| api | 8190 | REST and server-sent events; the reference is at `/docs` |
-| worker | (9100 inside) | Indexing, agent runs, test runs, applying patches; mounts the Docker socket to start sandbox containers |
-| postgres | 5459 | PostgreSQL 16 with pgvector and pg_trgm |
-| valkey | 6419 | Caches, rate limits, locks |
-| floci | 4619 | The AWS emulator (S3, SQS, KMS, Secrets Manager), provisioned by Terraform |
+| Service  | Port          | Role                                                                                                    |
+| -------- | ------------- | ------------------------------------------------------------------------------------------------------- |
+| web      | 3190          | The web app                                                                                             |
+| api      | 8190          | REST and server-sent events; the reference is at `/docs`                                                |
+| worker   | (9100 inside) | Indexing, agent runs, test runs, applying patches; mounts the Docker socket to start sandbox containers |
+| postgres | 5459          | PostgreSQL 16 with pgvector and pg_trgm                                                                 |
+| valkey   | 6419          | Caches, rate limits, locks                                                                              |
+| floci    | 4619          | The AWS emulator (S3, SQS, KMS, Secrets Manager), provisioned by Terraform                              |
 
 `make env` (run by `make up`) writes `deploy/compose/.env` with random, local-only secrets.
 
@@ -54,7 +54,7 @@ The command prints the logins and a CI API key. Sign in at http://localhost:3190
    before and after, and approve it (task #4 needs someone other than its requester, because the
    workspace requires independent review).
 5. **Ask for a change.** New task, template "Add a helper": `add \`clamp\` to ledgerkit/pricing.py`.
-   Watch the trace, then review and apply it to a branch, and export the `.patch`.
+Watch the trace, then review and apply it to a branch, and export the `.patch`.
 6. **Run tests.** Test runs, then Run tests. The log and per-test results come from the sandbox.
 
 ## Use your own repository

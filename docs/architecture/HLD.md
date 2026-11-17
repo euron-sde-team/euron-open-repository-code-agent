@@ -13,24 +13,24 @@ This document describes the system as built: what runs, where data lives, how wo
 and how it is deployed. The [low-level design](LLD.md) covers modules, algorithms, state
 machines and the API surface; the [data model](data-model.md) lists every table.
 
-| Topic | Page |
-| --- | --- |
-| Modules, algorithms, state machines, API | [LLD.md](LLD.md) |
-| Tables, indexes and storage | [data-model.md](data-model.md) |
-| Authentication, roles, sandboxing, hardening | [security.md](security.md) |
-| STRIDE analysis | [threat-model.md](threat-model.md) |
-| Decisions and their trade-offs | [adr/](adr/) |
+| Topic                                        | Page                               |
+| -------------------------------------------- | ---------------------------------- |
+| Modules, algorithms, state machines, API     | [LLD.md](LLD.md)                   |
+| Tables, indexes and storage                  | [data-model.md](data-model.md)     |
+| Authentication, roles, sandboxing, hardening | [security.md](security.md)         |
+| STRIDE analysis                              | [threat-model.md](threat-model.md) |
+| Decisions and their trade-offs               | [adr/](adr/)                       |
 
 ## 1. The product
 
 ### Who uses it
 
-| Role | Typical person | Can |
-| --- | --- | --- |
-| Viewer | Product manager, new hire, auditor | Browse code, search, ask questions, read tasks, patches and test runs |
-| Developer | Engineer | Everything a viewer can, plus describe tasks, comment on patches, run tests, export patches |
-| Maintainer | Tech lead, code owner | Everything a developer can, plus connect and sync repositories, approve or reject patches, apply them to a branch |
-| Owner | Engineering manager | Everything, plus members, API keys and workspace settings |
+| Role       | Typical person                     | Can                                                                                                               |
+| ---------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Viewer     | Product manager, new hire, auditor | Browse code, search, ask questions, read tasks, patches and test runs                                             |
+| Developer  | Engineer                           | Everything a viewer can, plus describe tasks, comment on patches, run tests, export patches                       |
+| Maintainer | Tech lead, code owner              | Everything a developer can, plus connect and sync repositories, approve or reject patches, apply them to a branch |
+| Owner      | Engineering manager                | Everything, plus members, API keys and workspace settings                                                         |
 
 A workspace groups repositories, people and their history. API keys belong to one
 workspace and carry the viewer or developer role, so CI can search, ask and file tasks
@@ -89,13 +89,13 @@ bundle and merge them through their usual review process.
 
 ## 3. Containers
 
-| Container | Source | Image | Role |
-| --- | --- | --- | --- |
-| Web app | `apps/web` (Next.js standalone) | `infra/docker/web.Dockerfile` | The UI. Serves `/env.js` with runtime configuration, so one image serves every environment. |
-| API | `apps/api` (FastAPI) | `infra/docker/api.Dockerfile` | REST and server-sent events under `/api/v1`. Authentication, search, answers, review decisions. Enqueues every slow job. |
-| Worker | same image, `python -m codeagent.worker` | api image | Consumes the job queue: indexing, agent runs, test runs, patch application. Talks to the sandbox. |
-| Sandbox | `infra/docker/sandbox.Dockerfile` | `codeagent-sandbox` | One short-lived container per test run, created by the worker through the Docker Engine API with networking disabled. |
-| CLI (one-off) | `codeagent` (typer) | api image | Migrations, accounts, demo seed, reindexing, OpenAPI export. |
+| Container     | Source                                   | Image                         | Role                                                                                                                     |
+| ------------- | ---------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Web app       | `apps/web` (Next.js standalone)          | `infra/docker/web.Dockerfile` | The UI. Serves `/env.js` with runtime configuration, so one image serves every environment.                              |
+| API           | `apps/api` (FastAPI)                     | `infra/docker/api.Dockerfile` | REST and server-sent events under `/api/v1`. Authentication, search, answers, review decisions. Enqueues every slow job. |
+| Worker        | same image, `python -m codeagent.worker` | api image                     | Consumes the job queue: indexing, agent runs, test runs, patch application. Talks to the sandbox.                        |
+| Sandbox       | `infra/docker/sandbox.Dockerfile`        | `codeagent-sandbox`           | One short-lived container per test run, created by the worker through the Docker Engine API with networking disabled.    |
+| CLI (one-off) | `codeagent` (typer)                      | api image                     | Migrations, accounts, demo seed, reindexing, OpenAPI export.                                                             |
 
 ```mermaid
 flowchart TB
@@ -205,27 +205,27 @@ removed, so every citation opens real lines.
 
 ## 5. Where data lives
 
-| Data | Store | Notes |
-| --- | --- | --- |
-| Accounts, workspaces, roles, API key hashes, audit trail | Postgres | API keys are stored as an HMAC with a server-side pepper |
-| Repositories, snapshots, files (with content), symbols, references, chunks with embeddings | Postgres | `pgvector` HNSW for chunks, `pg_trgm` GIN for file content and symbol names |
-| Conversations and cited answers | Postgres | Per user, per workspace |
-| Tasks, agent traces, patch revisions with old and new file contents, review comments | Postgres | Patches are self-contained, so pruning old snapshots never breaks a review |
-| Test runs and per-test results | Postgres | The log tail is inline; the full log is in S3 |
-| Uploaded archives, repository mirrors, full test logs | S3 | Private bucket, SSE-KMS, TLS-only, versioned on AWS |
-| Jobs | SQS | Ids only; a dead-letter queue after three failed receives |
-| Embedding cache, highlighted files, overview cache, rate limits, signed-out sessions, repository locks | Valkey | Every cache is optional: a Valkey outage slows requests but does not fail them, except sign-in rate limits and session revocation, which fail closed |
+| Data                                                                                                   | Store    | Notes                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accounts, workspaces, roles, API key hashes, audit trail                                               | Postgres | API keys are stored as an HMAC with a server-side pepper                                                                                             |
+| Repositories, snapshots, files (with content), symbols, references, chunks with embeddings             | Postgres | `pgvector` HNSW for chunks, `pg_trgm` GIN for file content and symbol names                                                                          |
+| Conversations and cited answers                                                                        | Postgres | Per user, per workspace                                                                                                                              |
+| Tasks, agent traces, patch revisions with old and new file contents, review comments                   | Postgres | Patches are self-contained, so pruning old snapshots never breaks a review                                                                           |
+| Test runs and per-test results                                                                         | Postgres | The log tail is inline; the full log is in S3                                                                                                        |
+| Uploaded archives, repository mirrors, full test logs                                                  | S3       | Private bucket, SSE-KMS, TLS-only, versioned on AWS                                                                                                  |
+| Jobs                                                                                                   | SQS      | Ids only; a dead-letter queue after three failed receives                                                                                            |
+| Embedding cache, highlighted files, overview cache, rate limits, signed-out sessions, repository locks | Valkey   | Every cache is optional: a Valkey outage slows requests but does not fail them, except sign-in rate limits and session revocation, which fail closed |
 
 ## 6. Offline by default, models when you want them
 
 Every AI capability has a deterministic local implementation that needs no network and no
 model download, so tests, the demo and the screenshots are reproducible:
 
-| Capability | Local implementation | Adapters |
-| --- | --- | --- |
-| Embeddings | `code-hash`: identifier-aware feature hashing (sub-tokens of camelCase and snake_case names, character trigrams, a lexicon of programming concepts), L2-normalised | OpenAI-compatible `/embeddings`, Ollama `/api/embed` |
-| Answers | Extractive answerer that reads symbols, signatures, docstrings and the reference graph and composes a cited answer | OpenAI-compatible chat completions, Ollama `/api/chat`, both streamed |
-| Planner | Skills: rename a symbol, add a catalogued helper with tests, repair a failing test by verified mutation search | The same chat adapters with search-and-replace edit blocks and a test-feedback loop |
+| Capability | Local implementation                                                                                                                                               | Adapters                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Embeddings | `code-hash`: identifier-aware feature hashing (sub-tokens of camelCase and snake_case names, character trigrams, a lexicon of programming concepts), L2-normalised | OpenAI-compatible `/embeddings`, Ollama `/api/embed`                                |
+| Answers    | Extractive answerer that reads symbols, signatures, docstrings and the reference graph and composes a cited answer                                                 | OpenAI-compatible chat completions, Ollama `/api/chat`, both streamed               |
+| Planner    | Skills: rename a symbol, add a catalogued helper with tests, repair a failing test by verified mutation search                                                     | The same chat adapters with search-and-replace edit blocks and a test-feedback loop |
 
 The provider in use is shown in the UI on every answer and every patch, and is part of
 each cache key, so switching providers never serves stale output.
@@ -268,12 +268,12 @@ task backend.
 
 ## 8. Quality attributes
 
-| Attribute | How it is met |
-| --- | --- |
-| Isolation | Every repository method that reads workspace data takes the workspace id; non-members get 404; an integration sweep calls every workspace route as an outsider |
-| Safety of changes | Agents only propose; approval needs the maintainer role (and a second person when required); apply re-checks the approval inside the worker |
-| Containment of untrusted code | Repository code only ever runs inside the sandbox: no network, capped CPU, memory, processes and time, all capabilities dropped |
-| Responsiveness | Slow work is queued; the API answers in milliseconds and the UI polls progress; files are highlighted once and cached |
-| Correctness of the index | Snapshots are written in one transaction and swapped in atomically; re-delivered jobs are no-ops |
-| Operability | Structured JSON logs with request ids, Prometheus metrics, liveness and readiness probes, graceful shutdown that lets in-flight jobs finish |
-| Portability | Runs anywhere Docker runs; every AWS dependency is emulated locally by Floci and provisioned by the same Terraform |
+| Attribute                     | How it is met                                                                                                                                                  |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Isolation                     | Every repository method that reads workspace data takes the workspace id; non-members get 404; an integration sweep calls every workspace route as an outsider |
+| Safety of changes             | Agents only propose; approval needs the maintainer role (and a second person when required); apply re-checks the approval inside the worker                    |
+| Containment of untrusted code | Repository code only ever runs inside the sandbox: no network, capped CPU, memory, processes and time, all capabilities dropped                                |
+| Responsiveness                | Slow work is queued; the API answers in milliseconds and the UI polls progress; files are highlighted once and cached                                          |
+| Correctness of the index      | Snapshots are written in one transaction and swapped in atomically; re-delivered jobs are no-ops                                                               |
+| Operability                   | Structured JSON logs with request ids, Prometheus metrics, liveness and readiness probes, graceful shutdown that lets in-flight jobs finish                    |
+| Portability                   | Runs anywhere Docker runs; every AWS dependency is emulated locally by Floci and provisioned by the same Terraform                                             |

@@ -50,12 +50,12 @@ The threats behind these controls are analysed in [threat-model.md](threat-model
 
 ## Authorization
 
-| Role | May |
-| --- | --- |
-| viewer | Read code, search, ask, read tasks, patches and test runs |
-| developer | Plus: describe tasks, retry and cancel them, comment on patches, run tests |
+| Role       | May                                                                                    |
+| ---------- | -------------------------------------------------------------------------------------- |
+| viewer     | Read code, search, ask, read tasks, patches and test runs                              |
+| developer  | Plus: describe tasks, retry and cancel them, comment on patches, run tests             |
 | maintainer | Plus: connect, sync, change and delete repositories; approve, reject and apply patches |
-| owner | Plus: members, API keys, workspace settings, the audit trail |
+| owner      | Plus: members, API keys, workspace settings, the audit trail                           |
 
 API keys are never people: they cannot comment, approve or apply, create conversations or
 manage keys. With `require_independent_review`, the person who asked for a task cannot decide
@@ -66,16 +66,16 @@ needs the data (the independent-review rule, comment ownership).
 
 Tests are code from the repository, so they run only in the sandbox (`sandbox/`):
 
-| Control | Docker backend (default where a daemon exists) | Subprocess backend (Fargate) |
-| --- | --- | --- |
-| Network | `NetworkDisabled`, `NetworkMode: none` | proxy variables pointing at a closed port, and a `sitecustomize` guard refusing non-loopback sockets and name lookups (Python only) |
-| Filesystem | the tree is copied in as a tar stream: no bind mounts, nothing of the host is visible; the container is removed afterwards | a fresh temporary directory, removed afterwards |
-| Privileges | non-root user, `CapDrop: ALL`, `no-new-privileges` | the worker's unprivileged user, a new session and process group |
-| CPU, memory | `NanoCpus`, `Memory` equal to `MemorySwap` (so no swap) | `RLIMIT_CPU`, `RLIMIT_AS` (Linux) |
-| Processes, files | `PidsLimit`, `nofile` ulimit, a 256 MB tmpfs | `RLIMIT_NPROC` (Linux), `RLIMIT_NOFILE`, `RLIMIT_FSIZE`, no core dumps |
-| Time | wait with a deadline, then kill the container | wait with a deadline, then kill the process group |
-| Environment | only what the run sets | scrubbed to `PATH`, `HOME`, locale and test variables: the worker's secrets never reach the tests |
-| Output | the log is capped; JUnit XML is parsed with `defusedxml` | same |
+| Control          | Docker backend (default where a daemon exists)                                                                             | Subprocess backend (Fargate)                                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Network          | `NetworkDisabled`, `NetworkMode: none`                                                                                     | proxy variables pointing at a closed port, and a `sitecustomize` guard refusing non-loopback sockets and name lookups (Python only) |
+| Filesystem       | the tree is copied in as a tar stream: no bind mounts, nothing of the host is visible; the container is removed afterwards | a fresh temporary directory, removed afterwards                                                                                     |
+| Privileges       | non-root user, `CapDrop: ALL`, `no-new-privileges`                                                                         | the worker's unprivileged user, a new session and process group                                                                     |
+| CPU, memory      | `NanoCpus`, `Memory` equal to `MemorySwap` (so no swap)                                                                    | `RLIMIT_CPU`, `RLIMIT_AS` (Linux)                                                                                                   |
+| Processes, files | `PidsLimit`, `nofile` ulimit, a 256 MB tmpfs                                                                               | `RLIMIT_NPROC` (Linux), `RLIMIT_NOFILE`, `RLIMIT_FSIZE`, no core dumps                                                              |
+| Time             | wait with a deadline, then kill the container                                                                              | wait with a deadline, then kill the process group                                                                                   |
+| Environment      | only what the run sets                                                                                                     | scrubbed to `PATH`, `HOME`, locale and test variables: the worker's secrets never reach the tests                                   |
+| Output           | the log is capped; JUnit XML is parsed with `defusedxml`                                                                   | same                                                                                                                                |
 
 The Docker backend is a security boundary. The subprocess backend is a guard for honest test
 suites, not a boundary: code that loads a native library or starts another runtime can get

@@ -107,7 +107,7 @@ trailers, tool footers or session links; the commit author is the person who wro
 ## Commit messages
 
 Imperative mood with a scope: `agent: refuse an empty search block on an existing file`,
-`web: show the failing test first`. Explain the *why* in the body when it is not
+`web: show the failing test first`. Explain the _why_ in the body when it is not
 obvious. Several small commits that each build and pass tests are easier to review than one
 large one.
 

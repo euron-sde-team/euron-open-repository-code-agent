@@ -2,12 +2,12 @@
 
 ## Processes
 
-| Process | Command | Scale |
-| --- | --- | --- |
-| API | `uvicorn codeagent.main:create_app --factory` | Stateless; any number of replicas. Migrations run on boot under an advisory lock |
-| Worker | `python -m codeagent.worker` | One or more. Jobs run with bounded concurrency; the reaper is elected through Valkey, so extra workers add throughput, not duplicate maintenance |
-| Web | `node apps/web/server.js` | Stateless |
-| CLI | `codeagent <command>` | One-off |
+| Process | Command                                       | Scale                                                                                                                                            |
+| ------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| API     | `uvicorn codeagent.main:create_app --factory` | Stateless; any number of replicas. Migrations run on boot under an advisory lock                                                                 |
+| Worker  | `python -m codeagent.worker`                  | One or more. Jobs run with bounded concurrency; the reaper is elected through Valkey, so extra workers add throughput, not duplicate maintenance |
+| Web     | `node apps/web/server.js`                     | Stateless                                                                                                                                        |
+| CLI     | `codeagent <command>`                         | One-off                                                                                                                                          |
 
 The CLI works without a terminal (it runs as an ECS one-off task):
 

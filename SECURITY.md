@@ -2,10 +2,10 @@
 
 ## Supported versions
 
-| Version | Supported |
-| ------- | --------- |
-| 0.x (latest minor) | Yes |
-| Older minors | No |
+| Version            | Supported |
+| ------------------ | --------- |
+| 0.x (latest minor) | Yes       |
+| Older minors       | No        |
 
 ## Reporting a vulnerability
 
@@ -28,12 +28,12 @@ uses the bundled sample repositories (`make demo`) or invented code is enough.
 
 What to expect:
 
-| Stage | Target |
-| ----- | ------ |
-| Acknowledgement | within 3 business days |
-| Initial assessment and severity | within 7 business days |
-| Fix or mitigation for critical and high issues | within 30 days |
-| Coordinated public disclosure | after a fix is released, credited to you unless you prefer otherwise |
+| Stage                                          | Target                                                               |
+| ---------------------------------------------- | -------------------------------------------------------------------- |
+| Acknowledgement                                | within 3 business days                                               |
+| Initial assessment and severity                | within 7 business days                                               |
+| Fix or mitigation for critical and high issues | within 30 days                                                       |
+| Coordinated public disclosure                  | after a fix is released, credited to you unless you prefer otherwise |
 
 ## Safe harbour
 

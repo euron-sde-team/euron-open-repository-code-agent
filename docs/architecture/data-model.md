@@ -46,23 +46,23 @@ erDiagram
 
 ## Accounts and access
 
-| Table | Holds | Notes |
-| --- | --- | --- |
-| `users` | email (`citext`, unique), name, Argon2id hash, `session_version`, failed sign-in count and lock time | Bumping `session_version` signs a person out everywhere |
-| `workspaces` | slug (unique), name, `settings` (JSON), `task_counter`, `run_counter` | The counters give tasks and runs human numbers (task #12) allocated atomically with `UPDATE ... RETURNING` |
-| `memberships` | (workspace, user, role) | Role is `owner`, `maintainer`, `developer` or `viewer` |
-| `api_keys` | name, 10-character prefix (unique), HMAC of the secret, role (`viewer` or `developer`), last used, expiry, revoked time | Only a keyed hash is stored |
+| Table         | Holds                                                                                                                   | Notes                                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `users`       | email (`citext`, unique), name, Argon2id hash, `session_version`, failed sign-in count and lock time                    | Bumping `session_version` signs a person out everywhere                                                    |
+| `workspaces`  | slug (unique), name, `settings` (JSON), `task_counter`, `run_counter`                                                   | The counters give tasks and runs human numbers (task #12) allocated atomically with `UPDATE ... RETURNING` |
+| `memberships` | (workspace, user, role)                                                                                                 | Role is `owner`, `maintainer`, `developer` or `viewer`                                                     |
+| `api_keys`    | name, 10-character prefix (unique), HMAC of the secret, role (`viewer` or `developer`), last used, expiry, revoked time | Only a keyed hash is stored                                                                                |
 
 ## The code index
 
-| Table | Holds | Key indexes |
-| --- | --- | --- |
-| `repositories` | slug, source (`git` or `archive`), URL, status, settings (test command and limits), language and size counters, `current_snapshot_id`, `mirror_key` | (workspace, slug) unique |
-| `snapshots` | one index of one commit: status, origin (`clone`, `sync`, `upload`), commit, stats, warnings, attempts | (repository, created_at) |
-| `repo_files` | path, language, size, line count, SHA-256, `is_test`, symbol count, content (null for binary or oversized files), parse error | GIN trigram on `content` (text search), (snapshot, path) unique |
-| `symbols` | name, qualified name, kind, line range, signature, docstring, parent, exported, `ref_count` | (snapshot, name); GIN trigram on `lower(name)` (fuzzy and prefix); (file, start_line) |
-| `symbol_refs` | an edge of the reference graph: source symbol, resolved target symbol, target name, kind (`call`, `import`, `inherit`), line | target, source and file |
-| `code_chunks` | a line range with its text, search terms (`tsvector`, `simple` configuration), token count and a `vector(384)` embedding | HNSW (`vector_cosine_ops`, m 16, ef_construction 64); GIN on the `tsvector` |
+| Table          | Holds                                                                                                                                               | Key indexes                                                                           |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `repositories` | slug, source (`git` or `archive`), URL, status, settings (test command and limits), language and size counters, `current_snapshot_id`, `mirror_key` | (workspace, slug) unique                                                              |
+| `snapshots`    | one index of one commit: status, origin (`clone`, `sync`, `upload`), commit, stats, warnings, attempts                                              | (repository, created_at)                                                              |
+| `repo_files`   | path, language, size, line count, SHA-256, `is_test`, symbol count, content (null for binary or oversized files), parse error                       | GIN trigram on `content` (text search), (snapshot, path) unique                       |
+| `symbols`      | name, qualified name, kind, line range, signature, docstring, parent, exported, `ref_count`                                                         | (snapshot, name); GIN trigram on `lower(name)` (fuzzy and prefix); (file, start_line) |
+| `symbol_refs`  | an edge of the reference graph: source symbol, resolved target symbol, target name, kind (`call`, `import`, `inherit`), line                        | target, source and file                                                               |
+| `code_chunks`  | a line range with its text, search terms (`tsvector`, `simple` configuration), token count and a `vector(384)` embedding                            | HNSW (`vector_cosine_ops`, m 16, ef_construction 64); GIN on the `tsvector`           |
 
 A snapshot is immutable once `ready`. The repository's `current_snapshot_id` moves to a new one
 in the same transaction that marks it ready, so readers never see a half-built index. Only
@@ -71,23 +71,23 @@ symbols, references and chunks.
 
 ## Conversations and answers
 
-| Table | Holds |
-| --- | --- |
-| `conversations` | owner (a person), optional repository scope, title, message count |
-| `messages` | role, content, the verified `citations` (path, line range, repository), the `sources` the answer was given, and `usage` (answerer, tokens, latency) |
+| Table           | Holds                                                                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `conversations` | owner (a person), optional repository scope, title, message count                                                                                   |
+| `messages`      | role, content, the verified `citations` (path, line range, repository), the `sources` the answer was given, and `usage` (answerer, tokens, latency) |
 
 Conversations are private to their owner: every query takes the user id as well as the
 workspace id.
 
 ## Tasks, patches and review
 
-| Table | Holds | Notes |
-| --- | --- | --- |
-| `tasks` | number, title, description, status, skill, planner, base snapshot and commit, the `trace` (timestamped notes), usage, attempts | (workspace, number) unique; (workspace, updated_at) |
-| `patches` | one revision: status, summary, rationale, plan, the unified diff, per-file stats, base commit, the two test runs, the decision (who, when, note), the applied branch and commit, `apply_error` | Self-contained: it does not depend on the index staying around |
-| `patch_files` | path, change type, language, additions, deletions, **old and new content** | Lets the diff viewer highlight both sides of a change after the snapshot was pruned |
-| `review_comments` | author, body, optional path, line and side (`old` or `new`), resolved | |
-| `test_runs` | number, trigger, status, commit, command, limits, backend, image, exit code, duration, counts, per-test `results`, the log tail, the S3 key of the full log | Agent runs belong to a task; patch runs also to a patch |
+| Table             | Holds                                                                                                                                                                                          | Notes                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `tasks`           | number, title, description, status, skill, planner, base snapshot and commit, the `trace` (timestamped notes), usage, attempts                                                                 | (workspace, number) unique; (workspace, updated_at)                                 |
+| `patches`         | one revision: status, summary, rationale, plan, the unified diff, per-file stats, base commit, the two test runs, the decision (who, when, note), the applied branch and commit, `apply_error` | Self-contained: it does not depend on the index staying around                      |
+| `patch_files`     | path, change type, language, additions, deletions, **old and new content**                                                                                                                     | Lets the diff viewer highlight both sides of a change after the snapshot was pruned |
+| `review_comments` | author, body, optional path, line and side (`old` or `new`), resolved                                                                                                                          |                                                                                     |
+| `test_runs`       | number, trigger, status, commit, command, limits, backend, image, exit code, duration, counts, per-test `results`, the log tail, the S3 key of the full log                                    | Agent runs belong to a task; patch runs also to a patch                             |
 
 ## Usage and audit
 
