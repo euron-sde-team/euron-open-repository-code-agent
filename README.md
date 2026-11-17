@@ -15,13 +15,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/euron-sde-team/euron-code-agent/stargazers"><img alt="Star this repo" src="https://img.shields.io/github/stars/euron-sde-team/euron-code-agent?style=social&label=Star%20this%20repo"></a>
-  <a href="https://github.com/euron-sde-team/euron-code-agent/fork"><img alt="Fork" src="https://img.shields.io/github/forks/euron-sde-team/euron-code-agent?style=social&label=Fork"></a>
-  <a href="https://github.com/euron-sde-team/euron-code-agent/watchers"><img alt="Watch" src="https://img.shields.io/github/watchers/euron-sde-team/euron-code-agent?style=social&label=Watch"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/stargazers"><img alt="Star this repo" src="https://img.shields.io/github/stars/euron-sde-team/euron-open-repository-code-agent?style=social&label=Star%20this%20repo"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/fork"><img alt="Fork" src="https://img.shields.io/github/forks/euron-sde-team/euron-open-repository-code-agent?style=social&label=Fork"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/watchers"><img alt="Watch" src="https://img.shields.io/github/watchers/euron-sde-team/euron-open-repository-code-agent?style=social&label=Watch"></a>
   <br>
-  <a href="https://github.com/euron-sde-team/euron-code-agent/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/euron-sde-team/euron-code-agent?style=flat&color=0f766e"></a>
-  <a href="https://github.com/euron-sde-team/euron-code-agent/pulls"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-34d399?style=flat"></a>
-  <a href="https://github.com/euron-sde-team/euron-code-agent/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/euron-sde-team/euron-code-agent?style=flat&color=8b95a8"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/euron-sde-team/euron-open-repository-code-agent?style=flat&color=0f766e"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/pulls"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-34d399?style=flat"></a>
+  <a href="https://github.com/euron-sde-team/euron-open-repository-code-agent/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/euron-sde-team/euron-open-repository-code-agent?style=flat&color=8b95a8"></a>
   <img alt="Runs offline with no API key" src="https://img.shields.io/badge/runs_offline-no_API_key_needed-064e3b?style=flat">
   <br>
   <a href="#built-by-the-team-behind-euron"><img alt="Built by the team behind Euron" src="https://img.shields.io/badge/built_by-Euron-4f46e5?style=flat"></a>
@@ -316,7 +316,7 @@ make down               # stop and delete the stack's volumes
 ## 🧭 Explore the repository
 
 ```text
-euron-code-agent/
+euron-open-repository-code-agent/
 |-- apps/
 |   |-- api/                 FastAPI service
 |   |   |-- src/codeagent/

@@ -21,7 +21,7 @@ from codeagent.integrations.storage import (
 @pytest.mark.parametrize(
     "url",
     [
-        "https://github.com/euron-sde-team/euron-code-agent.git",
+        "https://github.com/euron-sde-team/euron-open-repository-code-agent.git",
         "https://gitlab.com/group/sub/repo",
         "https://git.example.com:8443/team/repo.git",
     ],

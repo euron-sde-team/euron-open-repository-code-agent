@@ -28,7 +28,7 @@ RUN pnpm --filter @codeagent/web build
 FROM ${NODE_IMAGE} AS runtime
 LABEL org.opencontainers.image.title="Euron CodeAgent dashboard" \
       org.opencontainers.image.description="Developer dashboard for Euron CodeAgent" \
-      org.opencontainers.image.source="https://github.com/euron-sde-team/euron-code-agent" \
+      org.opencontainers.image.source="https://github.com/euron-sde-team/euron-open-repository-code-agent" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.vendor="ENGAGESPHERE TECHNOLOGY PRIVATE LIMITED"
 ENV NODE_ENV=production PORT=8080 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1

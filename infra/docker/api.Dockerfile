@@ -31,7 +31,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM ${PYTHON_IMAGE} AS runtime
 LABEL org.opencontainers.image.title="Euron CodeAgent API" \
       org.opencontainers.image.description="Repository-aware coding assistant: API, worker and operator CLI" \
-      org.opencontainers.image.source="https://github.com/euron-sde-team/euron-code-agent" \
+      org.opencontainers.image.source="https://github.com/euron-sde-team/euron-open-repository-code-agent" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.vendor="ENGAGESPHERE TECHNOLOGY PRIVATE LIMITED"
 ENV PATH=/app/.venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 TZ=UTC \
