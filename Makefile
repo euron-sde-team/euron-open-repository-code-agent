@@ -16,6 +16,9 @@ TF          := $(if $(HAS_TF),terraform,$(TF_DOCKER))
 TF_ROOT     := $(if $(HAS_TF),infra/terraform,/infra)
 # The browser suites sign in as the demo accounts seeded by `make demo`.
 DEMO_PASSWORD = $(shell grep -s '^CODEAGENT_DEMO_PASSWORD=' $(COMPOSE_DIR)/.env | cut -d= -f2)
+# The worker starts sandbox containers through the Docker socket, so its user needs the
+# socket's group. Detected from the socket itself (override with CODEAGENT_DOCKER_GID).
+DOCKER_GID   = $(or $(CODEAGENT_DOCKER_GID),$(shell docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --entrypoint stat valkey/valkey:8.1.10-alpine -c %g /var/run/docker.sock 2>/dev/null),0)
 ENV         ?= aws-dev
 TAG         ?= $(shell git rev-parse --short=12 HEAD 2>/dev/null || echo dev)
 
@@ -33,7 +36,7 @@ env: ## Generate deploy/compose/.env with random local-only secrets
 
 up: env ## Start everything on emulated AWS (Floci), provisioned by the same Terraform as production
 	@docker volume create codeagent-tf-plugins >/dev/null
-	$(FLOCI) up -d --build --wait
+	CODEAGENT_DOCKER_GID=$(DOCKER_GID) $(FLOCI) up -d --build --wait
 	@echo ""
 	@echo "  web           http://localhost:$${CODEAGENT_WEB_PORT:-3190}"
 	@echo "  api           http://localhost:$${CODEAGENT_API_PORT:-8190}/docs"
