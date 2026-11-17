@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { mergeParams, type ParamUpdates } from "@/lib/url-params";
 
@@ -23,9 +23,18 @@ export function useUrlParams(): {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  // Navigation is asynchronous: two updates in quick succession (a toggle, then typing) must
+  // build on each other, not both on the address the first one has not reached yet.
+  const pending = useRef<string | null>(null);
+  const current = params.toString();
+  useEffect(() => {
+    pending.current = null;
+  }, [current]);
   const update = useCallback(
     (updates: ParamUpdates) => {
-      const query = mergeParams(new URLSearchParams(window.location.search), updates);
+      const base = pending.current ?? window.location.search;
+      const query = mergeParams(new URLSearchParams(base), updates);
+      pending.current = query;
       router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
     },
     [router, pathname],
