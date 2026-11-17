@@ -19,7 +19,9 @@ from tests.integration.support import (
 pytestmark = pytest.mark.integration
 
 
-async def test_an_uploaded_archive_is_indexed(client: httpx.AsyncClient, workspace: Workspace) -> None:
+async def test_an_uploaded_archive_is_indexed(
+    client: httpx.AsyncClient, workspace: Workspace
+) -> None:
     repository = await upload_repository(client, workspace)
     assert repository["status"] == "ready"
     assert repository["file_count"] == 15
@@ -57,7 +59,9 @@ async def test_a_symbol_shows_its_callers_callees_and_tests(
     await upload_repository(client, workspace)
     hits = (
         await client.get(
-            f"{workspace.base}/search/symbols", params={"q": "apply_discount"}, headers=workspace.owner.headers
+            f"{workspace.base}/search/symbols",
+            params={"q": "apply_discount"},
+            headers=workspace.owner.headers,
         )
     ).json()["hits"]
     symbol_id = next(h["id"] for h in hits if h["name"] == "apply_discount")
@@ -76,13 +80,16 @@ async def test_a_second_upload_creates_a_new_snapshot_and_swaps_it_in(
 ) -> None:
     first = await upload_repository(client, workspace)
     base = f"{workspace.base}/repositories/ledgerkit"
-    changed = zip_repository("ledgerkit", extra={"ledgerkit/extra.py": "def brand_new_helper():\n    return 1\n"})
+    changed = zip_repository(
+        "ledgerkit", extra={"ledgerkit/extra.py": "def brand_new_helper():\n    return 1\n"}
+    )
     response = await client.post(
         f"{base}/upload",
         files={"file": ("ledgerkit-v2.zip", changed, "application/zip")},
         headers=workspace.members["maintainer"].headers,
     )
     assert response.status_code == 202, response.text
+
     async def second_is_current() -> bool:
         detail = (await client.get(base, headers=workspace.owner.headers)).json()
         return bool(detail["current_snapshot"]["id"] != first["current_snapshot"]["id"])
@@ -94,7 +101,9 @@ async def test_a_second_upload_creates_a_new_snapshot_and_swaps_it_in(
     assert len(history) == 2 and all(s["status"] == "ready" for s in history)
     found = (
         await client.get(
-            f"{workspace.base}/search/symbols", params={"q": "brand_new_helper"}, headers=workspace.owner.headers
+            f"{workspace.base}/search/symbols",
+            params={"q": "brand_new_helper"},
+            headers=workspace.owner.headers,
         )
     ).json()["hits"]
     assert found and found[0]["path"] == "ledgerkit/extra.py"
@@ -156,11 +165,15 @@ async def test_deleting_a_repository_removes_its_index(
 ) -> None:
     await upload_repository(client, workspace)
     base = f"{workspace.base}/repositories/ledgerkit"
-    assert (await client.delete(base, headers=workspace.members["maintainer"].headers)).status_code == 204
+    assert (
+        await client.delete(base, headers=workspace.members["maintainer"].headers)
+    ).status_code == 204
     assert (await client.get(base, headers=workspace.owner.headers)).status_code == 404
     hits = (
         await client.get(
-            f"{workspace.base}/search/symbols", params={"q": "apply_discount"}, headers=workspace.owner.headers
+            f"{workspace.base}/search/symbols",
+            params={"q": "apply_discount"},
+            headers=workspace.owner.headers,
         )
     ).json()["hits"]
     assert hits == []
@@ -181,7 +194,9 @@ async def test_repository_names_are_unique_slugs_and_lists_paginate(
     assert page["total"] == 2 and len(page["items"]) == 1 and page["limit"] == 1
     second = (
         await client.get(
-            f"{workspace.base}/repositories", params={"limit": 1, "offset": 1}, headers=workspace.owner.headers
+            f"{workspace.base}/repositories",
+            params={"limit": 1, "offset": 1},
+            headers=workspace.owner.headers,
         )
     ).json()
     assert second["items"][0]["slug"] != page["items"][0]["slug"]
