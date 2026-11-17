@@ -121,9 +121,11 @@ def _extract_zip(archive: Path, dest: Path, budget: _Budget) -> int:
             for info in bundle.infolist():
                 if info.is_dir():
                     continue
-                mode = info.external_attr >> 16
-                if mode and not stat.S_ISREG(mode):
-                    continue  # symbolic links and special files are never extracted
+                kind = stat.S_IFMT(info.external_attr >> 16)
+                # Some writers leave the file type bits unset; only a stated non-regular type
+                # (a symbolic link, a device) is skipped.
+                if kind and kind != stat.S_IFREG:
+                    continue
                 relative = safe_member_path(info.filename)
                 if relative is None:
                     continue
