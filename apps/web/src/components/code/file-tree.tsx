@@ -128,7 +128,7 @@ export function FileTree({
         onChange={setFilter}
         label="Filter files"
         placeholder="Filter files"
-        className="max-w-none"
+        className="max-w-none flex-none"
       />
       <nav aria-label="Files" className="scroll-quiet min-h-0 flex-1 overflow-y-auto">
         {tree.children.length === 0 ? (
