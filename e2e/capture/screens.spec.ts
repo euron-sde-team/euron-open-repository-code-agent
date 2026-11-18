@@ -128,7 +128,7 @@ test("the web app, page by page", async ({ page }) => {
   await shot(page, "14-api-keys");
 
   await page.goto(`${BASE}/settings?tab=engine`);
-  await expect(page.getByText("Sandbox")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sandbox" })).toBeVisible();
   await shot(page, "15-engine");
 });
 
